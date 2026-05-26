@@ -1,0 +1,52 @@
+{
+  "name": "srikanth",
+  "version": "2.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:watch": "jest --watch",
+    "test:unit": "jest --testPathPattern=unit --coverage",
+    "test:integration": "jest --testPathPattern=integration --coverage",
+    "start": "nodemon app.js",
+    "seed:all": "node seeds/seed-all.js",
+    "seed:all:fresh": "node seeds/seed-all.js --fresh",
+    "seed:events": "node -e \"require('./seeds/data/16-events.seed')().then(() => process.exit(0)).catch((error) => { console.error(error); process.exit(1); })\"",
+    "seed:fees-demo": "node -e \"require('./seeds/data/19-fees.seed')().then(() => process.exit(0)).catch((error) => { console.error(error); process.exit(1); })\"",
+    "seed:demo": "node scripts/seed-verification-data.js",
+    "seed:attendance-demo": "node scripts/seed-dummy-attendance.js",
+    "seed:staff": "node scripts/seed-staff-only.js",
+    "seed:default-school": "node scripts/seed-default-school.js",
+    "db:init-postgres": "node scripts/init-postgres-and-seed.js",
+    "db:run-sql": "node scripts/run-sql-file.js"
+  },
+  "author": "Srikanth",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
+    "express-validator": "^7.3.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "mysql2": "^3.15.3",
+    "nodemailer": "^7.0.10",
+    "pdfkit": "^0.18.0",
+    "pg": "^8.16.3",
+    "sequelize": "^6.37.7",
+    "winston": "^3.18.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "@types/jest": "^29.5.11",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.14",
+    "sinon": "^17.0.1",
+    "sqlite3": "^5.1.6",
+    "supertest": "^6.3.3"
+  }
+}

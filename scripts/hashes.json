@@ -1,0 +1,52 @@
+[
+  {
+    "email": "admin@sms.local",
+    "password": "admin123",
+    "hash": "$2b$10$0Xa6pgB/eejiKt54TiIq/O3Tsp70np.bUm/axfUph8Y0JwwyYqaxO"
+  },
+  {
+    "email": "student@sms.local",
+    "password": "student123",
+    "hash": "$2b$10$EozjHyAbSMFOTh3YRmHcS.L27JrVyVGqLVGsZaGY.kyCycVjPbeMm"
+  },
+  {
+    "email": "parent@sms.local",
+    "password": "parent123",
+    "hash": "$2b$10$0IfQrJahoFqRvPNNRKZsIuR2jmVzEXb8i5I/JghmcG4EM.2YbP9HW"
+  },
+  {
+    "email": "teacher@sms.local",
+    "password": "teacher123",
+    "hash": "$2b$10$zVqDYnL0SKaYH3tKeN4mVuyqGCyEm2llhKGuGx6R.nvC2D5w7/V1u"
+  },
+  {
+    "email": "library@sms.local",
+    "password": "library123",
+    "hash": "$2b$10$RcDf8N.ocei9NSEyjTLhgu9jkcq/uWDiQHaq1UhGko/DIL/FRSSne"
+  },
+  {
+    "email": "subjects@sms.local",
+    "password": "subjects123",
+    "hash": "$2b$10$U.NRsVuvmtsDStp6XkY06eD8eDXQMzCp94cL6paXGpRHsLA2SWRu."
+  },
+  {
+    "email": "accounts@sms.local",
+    "password": "accounts123",
+    "hash": "$2b$10$c3Z4r5jBcTSySKC9FQa.u.IjLhw.DwvGpMJH3q8XRSINz.2szxwxS"
+  },
+  {
+    "email": "exam@sms.local",
+    "password": "exam123",
+    "hash": "$2b$10$qFaY6mEWDjsUMIo7bKbgXu3mSThWXigIyp3IImZhb5nrjoLFFDmEa"
+  },
+  {
+    "email": "transport@sms.local",
+    "password": "transport123",
+    "hash": "$2b$10$2iHxh6cauEvnRcRrRkGcwuMGJReiH8yf2.Gw0HKP4dy81KNmazzEm"
+  },
+  {
+    "email": "management@sms.local",
+    "password": "management123",
+    "hash": "$2b$10$6FytzbwoeZg4Zq5X1T41guR/WL35kQG3VudeyfjlZHNBpAbm4Tzjm"
+  }
+]
