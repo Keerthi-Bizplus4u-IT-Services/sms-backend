@@ -149,6 +149,30 @@ testConnection().then(connected => {
   }
 });
 
+// Startup check: warn about schools with no current academic year or an expired one
+if (process.env.NODE_ENV !== 'test') {
+  const { QueryTypes } = require('sequelize');
+  sequelize.query(
+    `SELECT s.id AS school_id, s.name AS school_name,
+            ay.name AS current_year, ay.end_date
+     FROM schools s
+     LEFT JOIN academic_years ay
+       ON ay.school_id = s.id AND ay.is_current = true AND ay.deleted_at IS NULL
+     WHERE s.deleted_at IS NULL
+     ORDER BY s.id`,
+    { type: QueryTypes.SELECT }
+  ).then(rows => {
+    const today = new Date();
+    rows.forEach(row => {
+      if (!row.current_year) {
+        console.warn(`[AcademicYear] School "${row.school_name}" (id=${row.school_id}) has NO current academic year set.`);
+      } else if (new Date(row.end_date) < today) {
+        console.warn(`[AcademicYear] School "${row.school_name}" (id=${row.school_id}) current year "${row.current_year}" EXPIRED on ${row.end_date}. Update is_current to the new year.`);
+      }
+    });
+  }).catch(() => {/* silently skip if table not yet available */});
+}
+
 module.exports = app;
 module.exports.server = server;
 
