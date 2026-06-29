@@ -11,7 +11,7 @@ const {
 } = require('../validators/student-exit.validator');
 const { validate } = require('../../../middleware/validation.middleware');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 
 /**
  * Student Exit Routes
@@ -19,7 +19,7 @@ const { requirePermission } = require('../../../middleware/rbac.middleware');
  */
 
 // All routes require authentication and admin permission
-router.use(authenticate, requirePermission('students:write'));
+router.use(authenticate, enforceTenant(), requirePermission('students:write'));
 
 /**
  * @route   POST /api/v1/student-exits

@@ -21,13 +21,14 @@ const {
   generateFeesValidator
 } = require('../validators/transport.validator');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { validate } = require('../../../middleware/validation.middleware');
 
 // ─── Routes CRUD ───────────────────────────────────────
 router.get(
   '/routes',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   listRoutesValidator,
   validate,
@@ -37,6 +38,7 @@ router.get(
 router.get(
   '/routes/active',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   transportController.getActiveRoutes
 );
@@ -44,6 +46,7 @@ router.get(
 router.get(
   '/routes/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   routeIdValidator,
   validate,
@@ -53,6 +56,7 @@ router.get(
 router.post(
   '/routes',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   createRouteValidator,
   validate,
@@ -62,6 +66,7 @@ router.post(
 router.put(
   '/routes/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   updateRouteValidator,
   validate,
@@ -71,6 +76,7 @@ router.put(
 router.delete(
   '/routes/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:delete'),
   routeIdValidator,
   validate,
@@ -81,6 +87,7 @@ router.delete(
 router.get(
   '/routes/:routeId/stops',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   [require('express-validator').param('routeId').isInt({ min: 1 })],
   validate,
@@ -90,6 +97,7 @@ router.get(
 router.post(
   '/routes/:routeId/stops',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   createStopValidator,
   validate,
@@ -99,6 +107,7 @@ router.post(
 router.put(
   '/routes/:routeId/stops/:stopId',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   updateStopValidator,
   validate,
@@ -108,6 +117,7 @@ router.put(
 router.delete(
   '/routes/:routeId/stops/:stopId',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:delete'),
   stopIdValidator,
   validate,
@@ -117,6 +127,7 @@ router.delete(
 router.put(
   '/routes/:routeId/stops-bulk',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   bulkStopTimingsValidator,
   validate,
@@ -127,6 +138,7 @@ router.put(
 router.get(
   '/vehicles',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   listVehiclesValidator,
   validate,
@@ -136,6 +148,7 @@ router.get(
 router.get(
   '/vehicles/active',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   transportController.getActiveVehicles
 );
@@ -143,6 +156,7 @@ router.get(
 router.get(
   '/vehicles/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   vehicleIdValidator,
   validate,
@@ -152,6 +166,7 @@ router.get(
 router.post(
   '/vehicles',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   createVehicleValidator,
   validate,
@@ -161,6 +176,7 @@ router.post(
 router.put(
   '/vehicles/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   updateVehicleValidator,
   validate,
@@ -170,6 +186,7 @@ router.put(
 router.delete(
   '/vehicles/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:delete'),
   vehicleIdValidator,
   validate,
@@ -180,6 +197,7 @@ router.delete(
 router.get(
   '/drivers',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   transportController.getDrivers
 );
@@ -188,6 +206,7 @@ router.get(
 router.get(
   '/students',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   listStudentTransportValidator,
   validate,
@@ -197,6 +216,7 @@ router.get(
 router.get(
   '/students/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:read'),
   studentTransportIdValidator,
   validate,
@@ -206,6 +226,7 @@ router.get(
 router.post(
   '/students',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   assignStudentValidator,
   validate,
@@ -215,6 +236,7 @@ router.post(
 router.put(
   '/students/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   updateStudentTransportValidator,
   validate,
@@ -224,6 +246,7 @@ router.put(
 router.delete(
   '/students/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:delete'),
   studentTransportIdValidator,
   validate,
@@ -234,6 +257,7 @@ router.delete(
 router.post(
   '/fees/generate',
   authenticate,
+  enforceTenant(),
   requirePermission('transport:write'),
   generateFeesValidator,
   validate,

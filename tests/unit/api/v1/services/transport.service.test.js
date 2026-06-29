@@ -1,13 +1,18 @@
-jest.mock('../../../../../src/api/v1/repositories/transport.repository', () => ({
+jest.mock('../../../../../src/api/v1/repositories/transport-route.repository', () => ({
   findAll: jest.fn(),
   findById: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
-  delete: jest.fn()
+  softDelete: jest.fn()
+}));
+
+jest.mock('../../../../../src/api/v1/repositories/transport-stop.repository', () => ({
+  findByRouteId: jest.fn()
 }));
 
 const transportService = require('../../../../../src/api/v1/services/transport.service');
-const transportRepository = require('../../../../../src/api/v1/repositories/transport.repository');
+const transportRepository = require('../../../../../src/api/v1/repositories/transport-route.repository');
+const transportStopRepository = require('../../../../../src/api/v1/repositories/transport-stop.repository');
 
 describe('TransportService', () => {
   beforeEach(() => {
@@ -20,7 +25,7 @@ describe('TransportService', () => {
 
     const result = await transportService.listRoutes({ page: 1, pageSize: 20, search: 'bus' });
 
-    expect(transportRepository.findAll).toHaveBeenCalledWith({ page: 1, pageSize: 20, search: 'bus' });
+    expect(transportRepository.findAll).toHaveBeenCalledWith({ page: 1, pageSize: 20, search: 'bus', schoolId: undefined });
     expect(result).toEqual(payload);
   });
 
@@ -39,7 +44,7 @@ describe('TransportService', () => {
 
     const result = await transportService.createRoute({ routeName: 'North Route' });
 
-    expect(transportRepository.create).toHaveBeenCalledWith({ routeName: 'North Route' });
+    expect(transportRepository.create).toHaveBeenCalledWith({ routeName: 'North Route' }, undefined);
     expect(result).toEqual(route);
   });
 
@@ -53,11 +58,24 @@ describe('TransportService', () => {
   });
 
   it('should throw 404 when delete target is missing', async () => {
-    transportRepository.delete.mockResolvedValue(false);
+    transportRepository.softDelete.mockResolvedValue(false);
 
     await expect(transportService.deleteRoute(10)).rejects.toMatchObject({
       message: 'Transport route not found',
       statusCode: 404
     });
+  });
+
+  it('should return route with stops when found by id', async () => {
+    const route = { id: 5, routeCode: 'R1' };
+    const stops = [{ id: 1, stopName: 'Main Gate' }];
+    transportRepository.findById.mockResolvedValue(route);
+    transportStopRepository.findByRouteId.mockResolvedValue(stops);
+
+    const result = await transportService.getRouteById(5, 99);
+
+    expect(transportRepository.findById).toHaveBeenCalledWith(5, 99);
+    expect(transportStopRepository.findByRouteId).toHaveBeenCalledWith(5, 99);
+    expect(result).toEqual({ ...route, stops });
   });
 });

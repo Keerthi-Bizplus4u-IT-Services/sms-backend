@@ -90,16 +90,16 @@ Populate one row per route definition from each file.
 
 | Module | Route File | Mounted Prefix | Priority | Owner | Status |
 |---|---|---|---|---|---|
-| hostel | src/api/v1/routes/hostel.routes.js | /api/v1/* | P2 | Ops Domain | not-started |
-| transport | src/api/v1/routes/transport.routes.js | /api/v1/transport | P2 | Ops Domain | not-started |
-| timetable | src/api/v1/routes/timetable.routes.js | /api/v1/* | P2 | Academic Domain | not-started |
-| class timetable | src/api/v1/routes/class-timetable.routes.js | /api/v1/class-timetable | P2 | Academic Domain | not-started |
-| student exit | src/api/v1/routes/student-exit.routes.js | /api/v1/student-exits | P2 | Student Domain | not-started |
-| leave | src/api/v1/routes/leave.routes.js | /api/v1/leaves | P2 | HR Domain | not-started |
-| subscription | src/api/v1/routes/subscription.routes.js | /api/v1/subscription | P2 | Platform Team | not-started |
-| portal-parent | src/api/v1/routes/parent-portal.routes.js | /api/v1/parent | P2 | Portal Team | not-started |
-| portal-student | src/api/v1/routes/student-portal.routes.js | /api/v1/student | P2 | Portal Team | not-started |
-| portal-teacher | src/api/v1/routes/teacher-portal.routes.js | /api/v1/teacher | P2 | Portal Team | not-started |
+| hostel | src/api/v1/routes/hostel.routes.js | /api/v1/* | P2 | Ops Domain | in-progress |
+| transport | src/api/v1/routes/transport.routes.js | /api/v1/transport | P2 | Ops Domain | in-progress |
+| timetable | src/api/v1/routes/timetable.routes.js | /api/v1/* | P2 | Academic Domain | in-progress |
+| class timetable | src/api/v1/routes/class-timetable.routes.js | /api/v1/class-timetable | P2 | Academic Domain | in-progress |
+| student exit | src/api/v1/routes/student-exit.routes.js | /api/v1/student-exits | P2 | Student Domain | in-progress |
+| leave | src/api/v1/routes/leave.routes.js | /api/v1/leaves | P2 | HR Domain | in-progress |
+| subscription | src/api/v1/routes/subscription.routes.js | /api/v1/subscription | P2 | Platform Team | in-progress |
+| portal-parent | src/api/v1/routes/parent-portal.routes.js | /api/v1/parent | P2 | Portal Team | in-progress |
+| portal-student | src/api/v1/routes/student-portal.routes.js | /api/v1/student | P2 | Portal Team | in-progress |
+| portal-teacher | src/api/v1/routes/teacher-portal.routes.js | /api/v1/teacher | P2 | Portal Team | in-progress |
 
 ## Endpoint Fill Template (Copy/Paste)
 

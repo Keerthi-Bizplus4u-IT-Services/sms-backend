@@ -17,12 +17,13 @@ const {
   leaveDecisionValidator,
 } = require('../validators/leave.validator');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { validate } = require('../../../middleware/validation.middleware');
 
 router.get(
   '/my',
   authenticate,
+  enforceTenant(),
   paginationValidator,
   validate,
   leaveController.getMyLeaves
@@ -31,6 +32,7 @@ router.get(
 router.post(
   '/coverage-preview',
   authenticate,
+  enforceTenant(),
   coveragePreviewValidator,
   validate,
   leaveController.previewCoverage
@@ -39,6 +41,7 @@ router.post(
 router.post(
   '/apply',
   authenticate,
+  enforceTenant(),
   applyLeaveValidator,
   validate,
   leaveController.applyLeave
@@ -47,6 +50,7 @@ router.post(
 router.get(
   '/policies',
   authenticate,
+  enforceTenant(),
   requirePermission('leaves:approve'),
   policyQueryValidator,
   validate,
@@ -56,6 +60,7 @@ router.get(
 router.post(
   '/policies',
   authenticate,
+  enforceTenant(),
   requirePermission('leaves:approve'),
   createPolicyValidator,
   validate,
@@ -65,6 +70,7 @@ router.post(
 router.put(
   '/policies/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('leaves:approve'),
   policyIdValidator,
   updatePolicyValidator,
@@ -75,6 +81,7 @@ router.put(
 router.get(
   '/balance',
   authenticate,
+  enforceTenant(),
   balanceQueryValidator,
   validate,
   leaveController.getLeaveBalance
@@ -83,6 +90,7 @@ router.get(
 router.get(
   '/requests',
   authenticate,
+  enforceTenant(),
   requirePermission('leaves:approve'),
   approvalQueryValidator,
   validate,
@@ -92,6 +100,7 @@ router.get(
 router.get(
   '/requests/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('leaves:approve'),
   leaveRequestIdValidator,
   validate,
@@ -101,6 +110,7 @@ router.get(
 router.put(
   '/requests/:id/assignments',
   authenticate,
+  enforceTenant(),
   requirePermission('leaves:approve'),
   leaveRequestIdValidator,
   updateAssignmentsValidator,
@@ -111,6 +121,7 @@ router.put(
 router.patch(
   '/requests/:id/status',
   authenticate,
+  enforceTenant(),
   requirePermission('leaves:approve'),
   leaveRequestIdValidator,
   leaveDecisionValidator,
