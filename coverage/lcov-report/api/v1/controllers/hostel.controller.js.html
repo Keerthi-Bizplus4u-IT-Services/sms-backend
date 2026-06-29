@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/6</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -97,74 +97,74 @@
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L35'></a><a href='#L35'>35</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const hostelService = require('../services/hostel.service');
-const { success, error } = require('../../../utils/response');
-const { asyncHandler } = require('../../../middleware/error.middleware');
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const hostelService = <span class="cstat-no" title="statement not covered" >require('../services/hostel.service');</span>
+const { success, error } = <span class="cstat-no" title="statement not covered" >require('../../../utils/response');</span>
+const { asyncHandler } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/error.middleware');</span>
 &nbsp;
 class HostelController {
     /**
      * Get hostel rooms
      */
-    getHostelRooms = asyncHandler(async (req, res) =&gt; {
-        const schoolId = req.user?.schoolId || <span class="branch-1 cbranch-no" title="branch not covered" >req.session?.schoolId </span>|| <span class="branch-2 cbranch-no" title="branch not covered" >1;</span>
-        const result = await hostelService.listRooms(schoolId);
-        return success(res, result, 'Hostel rooms retrieved successfully', 200);
+    getHostelRooms = <span class="cstat-no" title="statement not covered" >asyncHandler(<span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
+        const schoolId = <span class="cstat-no" title="statement not covered" >req.user?.schoolId || req.session?.schoolId || 1;</span>
+        const result = <span class="cstat-no" title="statement not covered" >await hostelService.listRooms(schoolId);</span>
+<span class="cstat-no" title="statement not covered" >        return success(res, result, 'Hostel rooms retrieved successfully', 200);</span>
     });
 &nbsp;
     /**
      * Add hostel room
      */
-    addRoom = asyncHandler(async (req, res) =&gt; {
-        const schoolId = req.user?.schoolId || <span class="branch-1 cbranch-no" title="branch not covered" >req.session?.schoolId </span>|| <span class="branch-2 cbranch-no" title="branch not covered" >1;</span>
-        await hostelService.addRoom(req.body, schoolId);
-        return success(res, null, 'Room added successfully', 201);
+    addRoom = <span class="cstat-no" title="statement not covered" >asyncHandler(<span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
+        const schoolId = <span class="cstat-no" title="statement not covered" >req.user?.schoolId || req.session?.schoolId || 1;</span>
+<span class="cstat-no" title="statement not covered" >        await hostelService.addRoom(req.body, schoolId);</span>
+<span class="cstat-no" title="statement not covered" >        return success(res, null, 'Room added successfully', 201);</span>
     });
 &nbsp;
     /**
      * Delete hostel room
      */
-    deleteRoom = asyncHandler(async (req, res) =&gt; {
-        const { id } = req.params;
-        await hostelService.deleteRoom(id);
-        return success(res, null, 'Room deleted successfully', 200);
+    deleteRoom = <span class="cstat-no" title="statement not covered" >asyncHandler(<span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
+        const { id } = <span class="cstat-no" title="statement not covered" >req.params;</span>
+<span class="cstat-no" title="statement not covered" >        await hostelService.deleteRoom(id);</span>
+<span class="cstat-no" title="statement not covered" >        return success(res, null, 'Room deleted successfully', 200);</span>
     });
 }
 &nbsp;
-module.exports = new HostelController();
+<span class="cstat-no" title="statement not covered" >module.exports = new HostelController();</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -172,7 +172,7 @@ module.exports = new HostelController();
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T07:01:39.963Z
+                at 2026-06-29T16:53:34.321Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

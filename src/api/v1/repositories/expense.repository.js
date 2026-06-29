@@ -207,7 +207,7 @@ class ExpenseRepository {
     return result[0] || result;
   }
 
-  async deleteById(eid) {
+  async deleteById(eid, scope = {}) {
     const tableName = await this.getTableName();
     const columns = await this.getColumns();
     const idColumn = this.resolveColumn(columns, ['exid', 'id']);
@@ -221,10 +221,23 @@ class ExpenseRepository {
       throw new AppError('Expense identifier column is not available', 500);
     }
 
+    const whereParts = [`${idColumn} = ?`];
+    const replacements = [numericId];
+
+    if (columns.has('school_id') && Number.isInteger(scope.schoolId) && scope.schoolId > 0) {
+      whereParts.push('school_id = ?');
+      replacements.push(scope.schoolId);
+    }
+
+    if (columns.has('branch_id') && Number.isInteger(scope.branchId) && scope.branchId > 0) {
+      whereParts.push('branch_id = ?');
+      replacements.push(scope.branchId);
+    }
+
     const [result] = await sequelize.query(
-      `DELETE FROM ${tableName} WHERE ${idColumn} = ?`,
+      `DELETE FROM ${tableName} WHERE ${whereParts.join(' AND ')}`,
       {
-        replacements: [numericId],
+        replacements,
         type: QueryTypes.DELETE
       }
     );

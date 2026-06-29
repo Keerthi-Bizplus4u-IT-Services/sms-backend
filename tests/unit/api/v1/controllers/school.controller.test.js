@@ -10,6 +10,7 @@ const schoolController = require('../../../../../src/api/v1/controllers/school.c
 const { schoolService, schoolBranchService } = require('../../../../../src/api/v1/services/school.service');
 const { success, created } = require('../../../../../src/utils/response');
 const { mockRequest, mockResponse, mockNext } = require('../../../../helpers/testUtils');
+const { AppError } = require('../../../../../src/middleware/error.middleware');
 
 describe('SchoolController', () => {
   let req, res, next;
@@ -17,6 +18,8 @@ describe('SchoolController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     req = mockRequest();
+    req.user = { roleName: 'admin' };
+    req.schoolId = 1;
     res = mockResponse();
     next = mockNext();
     success.mockReturnValue(res);
@@ -31,8 +34,19 @@ describe('SchoolController', () => {
 
       await schoolController.listSchools(req, res, next);
 
-      expect(schoolService.listSchools).toHaveBeenCalledWith({ includeInactive: false });
+      expect(schoolService.listSchools).toHaveBeenCalledWith({ includeInactive: false, schoolId: 1 });
       expect(success).toHaveBeenCalledWith(res, schools, 'Schools retrieved successfully');
+    });
+
+    it('should not scope school list for super admin', async () => {
+      req.user = { roleName: 'super_admin' };
+      req.schoolId = null;
+      req.query = {};
+      schoolService.listSchools.mockResolvedValue([]);
+
+      await schoolController.listSchools(req, res, next);
+
+      expect(schoolService.listSchools).toHaveBeenCalledWith({ includeInactive: false, schoolId: null });
     });
 
     it('should include inactive schools when requested', async () => {
@@ -41,7 +55,7 @@ describe('SchoolController', () => {
 
       await schoolController.listSchools(req, res, next);
 
-      expect(schoolService.listSchools).toHaveBeenCalledWith({ includeInactive: true });
+      expect(schoolService.listSchools).toHaveBeenCalledWith({ includeInactive: true, schoolId: 1 });
     });
 
     it('should call next on error', async () => {
@@ -62,8 +76,17 @@ describe('SchoolController', () => {
 
       await schoolController.getSchool(req, res, next);
 
-      expect(schoolService.getSchoolById).toHaveBeenCalledWith('1');
+      expect(schoolService.getSchoolById).toHaveBeenCalledWith('1', { schoolId: 1 });
       expect(success).toHaveBeenCalledWith(res, expect.any(Object), 'School retrieved successfully');
+    });
+
+    it('should deny access when school id is outside scoped tenant', async () => {
+      req.params = { id: '2' };
+
+      await schoolController.getSchool(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.any(AppError));
+      expect(schoolService.getSchoolById).not.toHaveBeenCalled();
     });
 
     it('should call next on not-found', async () => {
@@ -117,7 +140,17 @@ describe('SchoolController', () => {
 
       await schoolController.updateSchool(req, res, next);
 
-      expect(schoolService.updateSchool).toHaveBeenCalledWith('1', req.body);
+      expect(schoolService.updateSchool).toHaveBeenCalledWith('1', req.body, { schoolId: 1 });
+    });
+
+    it('should deny update outside scoped tenant', async () => {
+      req.params = { id: '5' };
+      req.body = { name: 'Updated School' };
+
+      await schoolController.updateSchool(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.any(AppError));
+      expect(schoolService.updateSchool).not.toHaveBeenCalled();
     });
   });
 
@@ -128,8 +161,17 @@ describe('SchoolController', () => {
 
       await schoolController.deleteSchool(req, res, next);
 
-      expect(schoolService.deleteSchool).toHaveBeenCalledWith('1');
+      expect(schoolService.deleteSchool).toHaveBeenCalledWith('1', { schoolId: 1 });
       expect(success).toHaveBeenCalledWith(res, null, 'School deleted successfully');
+    });
+
+    it('should deny delete outside scoped tenant', async () => {
+      req.params = { id: '7' };
+
+      await schoolController.deleteSchool(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.any(AppError));
+      expect(schoolService.deleteSchool).not.toHaveBeenCalled();
     });
   });
 
@@ -187,14 +229,24 @@ describe('SchoolController', () => {
   });
 
   describe('cloneSchoolSettings', () => {
-    it('should clone settings from source school', async () => {
-      req.params = { id: '2' };
+    it('should clone settings from source school within scoped tenant', async () => {
+      req.params = { id: '1' };
       req.body = { source_school_id: 1, clone_scopes: ['classes', 'sections'] };
       schoolService.cloneSchoolSettings.mockResolvedValue({ cloned: true });
 
       await schoolController.cloneSchoolSettings(req, res, next);
 
-      expect(schoolService.cloneSchoolSettings).toHaveBeenCalledWith('2', 1, ['classes', 'sections']);
+      expect(schoolService.cloneSchoolSettings).toHaveBeenCalledWith('1', 1, ['classes', 'sections']);
+    });
+
+    it('should deny clone when target school is outside scoped tenant', async () => {
+      req.params = { id: '2' };
+      req.body = { source_school_id: 1, clone_scopes: ['classes'] };
+
+      await schoolController.cloneSchoolSettings(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.any(AppError));
+      expect(schoolService.cloneSchoolSettings).not.toHaveBeenCalled();
     });
   });
 

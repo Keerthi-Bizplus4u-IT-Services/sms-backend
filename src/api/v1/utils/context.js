@@ -9,11 +9,36 @@ const parsePositiveInt = (value) => {
   return Number.isNaN(parsed) || parsed <= 0 ? null : parsed;
 };
 
+const normalizeRoleName = (roleName) => {
+  if (!roleName || typeof roleName !== 'string') {
+    return null;
+  }
+
+  return roleName.trim().toLowerCase();
+};
+
+const isSuperAdmin = (req) => {
+  const roleFromAuthContext = normalizeRoleName(req?.authContext?.roleName);
+  if (roleFromAuthContext) {
+    return roleFromAuthContext === 'super_admin';
+  }
+
+  return normalizeRoleName(req?.user?.roleName) === 'super_admin';
+};
+
 const resolveSchoolIdFromRequest = (req, ...additionalCandidates) => {
-  const candidateValues = [
-    parsePositiveInt(req?.user?.schoolId),
-    parsePositiveInt(req?.user?.school_id),
-    parsePositiveInt(req?.schoolId),
+  const serverScopedSchoolId =
+    parsePositiveInt(req?.authContext?.schoolId) ||
+    parsePositiveInt(req?.schoolId) ||
+    parsePositiveInt(req?.user?.schoolId) ||
+    parsePositiveInt(req?.user?.school_id);
+
+  if (!isSuperAdmin(req)) {
+    return serverScopedSchoolId;
+  }
+
+  const superAdminCandidates = [
+    serverScopedSchoolId,
     parsePositiveInt(req?.headers?.['x-school-id']),
     parsePositiveInt(req?.query?.schoolId),
     parsePositiveInt(req?.query?.school_id),
@@ -26,14 +51,14 @@ const resolveSchoolIdFromRequest = (req, ...additionalCandidates) => {
     ...additionalCandidates.map((value) => parsePositiveInt(value))
   ];
 
-  const resolved = candidateValues.find((value) => !!value) || null;
+  const resolved = superAdminCandidates.find((value) => !!value) || null;
   if (resolved) {
     return resolved;
   }
 
   // super_admin accounts are intentionally global for report scope.
   // Do not force a default school because that hides cross-school data.
-  if (req?.user?.roleName === 'super_admin') {
+  if (isSuperAdmin(req)) {
     return null;
   }
 

@@ -14,8 +14,8 @@ class ExpenseService {
     return await expenseRepository.create(data, scope);
   }
 
-  async deleteExpense(eid) {
-    return await expenseRepository.deleteById(eid);
+  async deleteExpense(eid, scope = {}) {
+    return await expenseRepository.deleteById(eid, scope);
   }
 }
 

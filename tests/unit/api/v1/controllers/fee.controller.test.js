@@ -42,13 +42,22 @@ describe('FeeController', () => {
 
   describe('getFees', () => {
     it('should retrieve fee data with scope', async () => {
-      req.query = { page: '1', limit: '10' };
+      req.query = { page: '1', limit: '10', branchId: '3', studentId: '7' };
       const payload = { fees: [{ id: 1 }], total: 1 };
       feeService.getFees.mockResolvedValue(payload);
 
       await feeController.getFees(req, res, next);
 
-      expect(feeService.getFees).toHaveBeenCalledWith(req.query, expect.objectContaining({ schoolId: 1 }));
+      expect(feeService.getFees).toHaveBeenCalledWith(
+        req.query,
+        expect.objectContaining({
+          schoolId: 1,
+          branchId: 3,
+          selectedStudentId: 7,
+          userId: 1,
+          roleName: 'admin'
+        })
+      );
       expect(success).toHaveBeenCalledWith(res, payload, 'Fee data retrieved successfully', 200);
     });
   });
@@ -71,6 +80,44 @@ describe('FeeController', () => {
       await feeController.recordPayment(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expect.any(Error));
+    });
+  });
+
+  describe('downloadReceipt', () => {
+    it('should download receipt with tenant scope', async () => {
+      req.params = { paymentId: '11' };
+      req.query = { branchId: '2' };
+      res.set = jest.fn().mockReturnValue(res);
+      const pdfBuffer = Buffer.from('pdf-content');
+      feeService.getPaymentReceipt = jest.fn().mockResolvedValue({
+        pdfBuffer,
+        fileName: 'receipt.pdf'
+      });
+
+      await feeController.downloadReceipt(req, res, next);
+
+      expect(feeService.getPaymentReceipt).toHaveBeenCalledWith(
+        11,
+        expect.objectContaining({ schoolId: 1, branchId: 2 })
+      );
+      expect(res.send).toHaveBeenCalledWith(pdfBuffer);
+    });
+  });
+
+  describe('emailReceipt', () => {
+    it('should email receipt with tenant scope', async () => {
+      req.params = { paymentId: '13' };
+      req.body = { email: 'parent@example.com' };
+      feeService.emailPaymentReceipt = jest.fn().mockResolvedValue({ sent: true });
+
+      await feeController.emailReceipt(req, res, next);
+
+      expect(feeService.emailPaymentReceipt).toHaveBeenCalledWith(
+        13,
+        { email: 'parent@example.com' },
+        expect.objectContaining({ schoolId: 1 })
+      );
+      expect(success).toHaveBeenCalledWith(res, { sent: true }, 'Fee receipt email sent successfully', 200);
     });
   });
 

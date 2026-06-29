@@ -20,7 +20,7 @@ class ExpenseController {
   });
 
   deleteExpense = asyncHandler(async (req, res) => {
-    await expenseService.deleteExpense(req.params.eid);
+    await expenseService.deleteExpense(req.params.eid, resolveExpenseScope(req));
     return success(res, null, 'Expense deleted successfully', 200);
   });
 }

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const feeController = require('../controllers/fee.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const {
   getFeesValidator,
   createFeePaymentValidator,
@@ -14,6 +14,7 @@ const { validate } = require('../../../middleware/validation.middleware');
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('fees:read'),
   getFeesValidator,
   validate,
@@ -23,6 +24,7 @@ router.get(
 router.post(
   '/payments',
   authenticate,
+  enforceTenant(),
   requirePermission('fees:write'),
   createFeePaymentValidator,
   validate,
@@ -32,6 +34,7 @@ router.post(
 router.get(
   '/payments/:paymentId/receipt',
   authenticate,
+  enforceTenant(),
   requirePermission('fees:read'),
   feePaymentIdValidator,
   validate,
@@ -41,6 +44,7 @@ router.get(
 router.post(
   '/payments/:paymentId/email-receipt',
   authenticate,
+  enforceTenant(),
   requirePermission('fees:write'),
   emailReceiptValidator,
   validate,

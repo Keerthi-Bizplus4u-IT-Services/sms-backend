@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.53% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/13</span>
+                <span class='fraction'>0/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/6</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.53% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/13</span>
+                <span class='fraction'>0/13</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -101,22 +101,22 @@
 <a name='L36'></a><a href='#L36'>36</a>
 <a name='L37'></a><a href='#L37'>37</a>
 <a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -138,23 +138,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const dashboardRepository = require('../repositories/dashboard.repository');
-const libraryDashboardRepository = require('../repositories/library-dashboard.repository');
-const schoolService = require('./school.service');
-const { AppError } = require('../../../middleware/error.middleware');
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const dashboardRepository = <span class="cstat-no" title="statement not covered" >require('../repositories/dashboard.repository');</span>
+const libraryDashboardRepository = <span class="cstat-no" title="statement not covered" >require('../repositories/library-dashboard.repository');</span>
+const schoolService = <span class="cstat-no" title="statement not covered" >require('./school.service');</span>
+const { AppError } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/error.middleware');</span>
 &nbsp;
 class DashboardService {
-  async getSummary(scope = {}) {
-    return await dashboardRepository.getSummary(scope);
+<span class="fstat-no" title="function not covered" >  as</span>ync getSummary(scope = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+<span class="cstat-no" title="statement not covered" >    return await dashboardRepository.getSummary(scope);</span>
   }
 &nbsp;
-  async getGenderCounts(scope = {}) {
-    return await dashboardRepository.getGenderCounts(scope);
+<span class="fstat-no" title="function not covered" >  as</span>ync getGenderCounts(scope = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+<span class="cstat-no" title="statement not covered" >    return await dashboardRepository.getGenderCounts(scope);</span>
   }
 &nbsp;
-  async getLibrarySummary(scope = {}) {
-    return await libraryDashboardRepository.getSummary(scope);
+<span class="fstat-no" title="function not covered" >  as</span>ync getLibrarySummary(scope = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+<span class="cstat-no" title="statement not covered" >    return await libraryDashboardRepository.getSummary(scope);</span>
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  as</span>ync getSetupStatus(scope = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
@@ -176,7 +176,7 @@ class DashboardService {
   }
 }
 &nbsp;
-module.exports = new DashboardService();
+<span class="cstat-no" title="statement not covered" >module.exports = new DashboardService();</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -184,7 +184,7 @@ module.exports = new DashboardService();
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T07:01:40.280Z
+                at 2026-06-29T16:53:34.705Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

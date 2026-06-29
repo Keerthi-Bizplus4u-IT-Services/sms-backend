@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const expenseController = require('../controllers/expense.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { getExpensesValidator, expenseIdValidator, createExpenseValidator } = require('../validators/expense.validator');
 const { validate } = require('../../../middleware/validation.middleware');
 
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('expenses:read'),
   getExpensesValidator,
   validate,
@@ -18,7 +19,8 @@ router.get(
 router.post(
   '/',
   authenticate,
-  requirePermission('expenses:read'),
+  enforceTenant(),
+  requirePermission('expenses:write'),
   createExpenseValidator,
   validate,
   expenseController.createExpense
@@ -27,6 +29,7 @@ router.post(
 router.delete(
   '/:eid',
   authenticate,
+  enforceTenant(),
   requirePermission('expenses:delete'),
   expenseIdValidator,
   validate,

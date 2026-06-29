@@ -118,7 +118,12 @@
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -136,14 +141,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -154,6 +151,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -163,7 +171,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -177,13 +187,14 @@
 const router = <span class="cstat-no" title="statement not covered" >express.Router();</span>
 const reportController = <span class="cstat-no" title="statement not covered" >require('../controllers/report.controller');</span>
 const { authenticate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/auth.middleware');</span>
-const { authorize, requirePermission } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
+const { authorize, requirePermission, enforceTenant } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
 const { reportQueryValidator } = <span class="cstat-no" title="statement not covered" >require('../validators/report.validator');</span>
 const { validate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/validation.middleware');</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >router.get(</span>
   '/data-integrity-preview',
   authenticate,
+  enforceTenant(),
   authorize(['admin', 'super_admin']),
   requirePermission('reports:read'),
   reportQueryValidator,
@@ -194,6 +205,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
 <span class="cstat-no" title="statement not covered" >router.get(</span>
   '/fees',
   authenticate,
+  enforceTenant(),
   requirePermission('reports:read'),
   reportQueryValidator,
   validate,
@@ -203,6 +215,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
 <span class="cstat-no" title="statement not covered" >router.get(</span>
   '/expenses',
   authenticate,
+  enforceTenant(),
   requirePermission('reports:read'),
   reportQueryValidator,
   validate,
@@ -212,6 +225,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
 <span class="cstat-no" title="statement not covered" >router.get(</span>
   '/students',
   authenticate,
+  enforceTenant(),
   requirePermission('reports:read'),
   reportQueryValidator,
   validate,
@@ -221,6 +235,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
 <span class="cstat-no" title="statement not covered" >router.get(</span>
   '/financial-summary',
   authenticate,
+  enforceTenant(),
   requirePermission('reports:read'),
   reportQueryValidator,
   validate,
@@ -235,7 +250,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T07:01:40.280Z
+                at 2026-06-29T16:53:34.705Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -13,7 +13,7 @@ const {
 } = require('../validators/student.validator');
 const { validate } = require('../../../middleware/validation.middleware');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { uploadStudentFiles, uploadSingleAadhar } = require('../../../middleware/photo-upload.middleware');
 const { normalizePayload } = require('../../../middleware/payload-normalizer.middleware');
 const { enforceStudentLimit } = require('../../../middleware/trial-limits.middleware');
@@ -31,6 +31,7 @@ const { enforceStudentLimit } = require('../../../middleware/trial-limits.middle
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('students:read'),
   getStudentsValidator,
   validate,
@@ -45,6 +46,7 @@ router.get(
 router.get(
   '/suggestions/admission-roll',
   authenticate,
+  enforceTenant(),
   requirePermission('students:read'),
   getAdmissionRollSuggestionValidator,
   validate,
@@ -59,6 +61,7 @@ router.get(
 router.post(
   '/upload-document',
   authenticate,
+  enforceTenant(),
   requirePermission('students:write'),
   uploadSingleAadhar,
   studentController.uploadDocument
@@ -72,6 +75,7 @@ router.post(
 router.get(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('students:read'),
   studentIdValidator,
   validate,
@@ -86,6 +90,7 @@ router.get(
 router.get(
   '/admission/:admissionNumber',
   authenticate,
+  enforceTenant(),
   requirePermission('students:read'),
   studentController.getStudentByAdmissionNumber
 );
@@ -98,6 +103,7 @@ router.get(
 router.get(
   '/roll/:rollNumber',
   authenticate,
+  enforceTenant(),
   requirePermission('students:read'),
   studentController.getStudentByRollNumber
 );
@@ -110,6 +116,7 @@ router.get(
 router.get(
   '/class/:classId',
   authenticate,
+  enforceTenant(),
   requirePermission('students:read'),
   studentsByClassValidator,
   validate,
@@ -124,6 +131,7 @@ router.get(
 router.get(
   '/class/:classId/section/:sectionId',
   authenticate,
+  enforceTenant(),
   requirePermission('students:read'),
   studentsBySectionValidator,
   validate,
@@ -138,6 +146,7 @@ router.get(
 router.post(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('students:write'),
   enforceStudentLimit,
   uploadStudentFiles,
@@ -155,6 +164,7 @@ router.post(
 router.put(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('students:write'),
   uploadStudentFiles,
   normalizePayload,
@@ -171,6 +181,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('students:delete'),
   studentIdValidator,
   validate,
@@ -185,6 +196,7 @@ router.delete(
 router.post(
   '/promotions',
   authenticate,
+  enforceTenant(),
   requirePermission('students:write'),
   promoteStudentsValidator,
   validate,

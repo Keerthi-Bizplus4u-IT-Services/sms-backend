@@ -83,6 +83,20 @@ describe('StudentController', () => {
       );
     });
 
+    it('should allow super_admin global scope when no school is selected', async () => {
+      req.user = { id: 1, roleName: 'super_admin', schoolId: null };
+      req.query = { page: '1', limit: '10' };
+      resolveSchoolIdFromRequest.mockReturnValue(null);
+      studentService.getStudents.mockResolvedValue({ students: [], total: 0 });
+
+      await studentController.getStudents(req, res, next);
+
+      expect(studentService.getStudents).toHaveBeenCalledWith(
+        expect.objectContaining({ schoolId: null }),
+        { isSuperAdmin: true }
+      );
+    });
+
     it('should propagate service errors', async () => {
       req.query = {};
       studentService.getStudents.mockRejectedValue(new Error('DB error'));
@@ -90,6 +104,18 @@ describe('StudentController', () => {
       await studentController.getStudents(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    it('should propagate missing tenant context errors for non-super-admin', async () => {
+      req.query = {};
+      ensureSchoolContext.mockImplementation(() => {
+        throw new Error('School context is required');
+      });
+
+      await studentController.getStudents(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.any(Error));
+      expect(studentService.getStudents).not.toHaveBeenCalled();
     });
   });
 

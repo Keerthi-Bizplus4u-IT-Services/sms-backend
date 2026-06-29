@@ -160,27 +160,27 @@ const {
 } = <span class="cstat-no" title="statement not covered" >require('../validators/school.validator');</span>
 const { validate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/validation.middleware');</span>
 const { authenticate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/auth.middleware');</span>
-const { requirePermission } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
+const { requirePermission, enforceTenant } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
 const { enforceBranchLimit } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/trial-limits.middleware');</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >router.get('/', authenticate, requirePermission('schools:read'), listSchoolsValidator, validate, schoolController.listSchools);</span>
-<span class="cstat-no" title="statement not covered" >router.get('/:id', authenticate, requirePermission('schools:read'), schoolIdValidator, validate, schoolController.getSchool);</span>
-<span class="cstat-no" title="statement not covered" >router.post('/', authenticate, requirePermission('schools:write'), createSchoolValidator, validate, schoolController.createSchool);</span>
-<span class="cstat-no" title="statement not covered" >router.post('/onboarding', authenticate, requirePermission('schools:write'), createSchoolOnboardingValidator, validate, schoolController.createSchoolOnboarding);</span>
-<span class="cstat-no" title="statement not covered" >router.put('/:id', authenticate, requirePermission('schools:write'), updateSchoolValidator, validate, schoolController.updateSchool);</span>
-<span class="cstat-no" title="statement not covered" >router.delete('/:id', authenticate, requirePermission('schools:delete'), schoolIdValidator, validate, schoolController.deleteSchool);</span>
-<span class="cstat-no" title="statement not covered" >router.get('/:id/onboarding-checklist', authenticate, requirePermission('schools:read'), schoolIdValidator, validate, schoolController.getOnboardingChecklist);</span>
-<span class="cstat-no" title="statement not covered" >router.post('/:id/clone-settings', authenticate, requirePermission('schools:write'), schoolCloneSettingsValidator, validate, schoolController.cloneSchoolSettings);</span>
-<span class="cstat-no" title="statement not covered" >router.get('/:id/settings', authenticate, requirePermission('schools:read'), schoolSettingsValidator, validate, schoolController.getSchoolSettings);</span>
-<span class="cstat-no" title="statement not covered" >router.put('/:id/settings', authenticate, requirePermission('schools:write'), schoolSettingsValidator, validate, schoolController.updateSchoolSettings);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/', authenticate, enforceTenant(), requirePermission('schools:read'), listSchoolsValidator, validate, schoolController.listSchools);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/:id', authenticate, enforceTenant(), requirePermission('schools:read'), schoolIdValidator, validate, schoolController.getSchool);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/', authenticate, enforceTenant(), requirePermission('schools:write'), createSchoolValidator, validate, schoolController.createSchool);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/onboarding', authenticate, enforceTenant(), requirePermission('schools:write'), createSchoolOnboardingValidator, validate, schoolController.createSchoolOnboarding);</span>
+<span class="cstat-no" title="statement not covered" >router.put('/:id', authenticate, enforceTenant(), requirePermission('schools:write'), updateSchoolValidator, validate, schoolController.updateSchool);</span>
+<span class="cstat-no" title="statement not covered" >router.delete('/:id', authenticate, enforceTenant(), requirePermission('schools:delete'), schoolIdValidator, validate, schoolController.deleteSchool);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/:id/onboarding-checklist', authenticate, enforceTenant(), requirePermission('schools:read'), schoolIdValidator, validate, schoolController.getOnboardingChecklist);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/:id/clone-settings', authenticate, enforceTenant(), requirePermission('schools:write'), schoolCloneSettingsValidator, validate, schoolController.cloneSchoolSettings);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/:id/settings', authenticate, enforceTenant(), requirePermission('schools:read'), schoolSettingsValidator, validate, schoolController.getSchoolSettings);</span>
+<span class="cstat-no" title="statement not covered" >router.put('/:id/settings', authenticate, enforceTenant(), requirePermission('schools:write'), schoolSettingsValidator, validate, schoolController.updateSchoolSettings);</span>
 &nbsp;
 // Dummy data routes
-<span class="cstat-no" title="statement not covered" >router.post('/:id/import-dummy-data', authenticate, requirePermission('schools:write'), dummyDataValidator, validate, schoolController.importDummyData);</span>
-<span class="cstat-no" title="statement not covered" >router.delete('/:id/dummy-data', authenticate, requirePermission('schools:delete'), dummyDataValidator, validate, schoolController.deleteDummyData);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/:id/import-dummy-data', authenticate, enforceTenant(), requirePermission('schools:write'), dummyDataValidator, validate, schoolController.importDummyData);</span>
+<span class="cstat-no" title="statement not covered" >router.delete('/:id/dummy-data', authenticate, enforceTenant(), requirePermission('schools:delete'), dummyDataValidator, validate, schoolController.deleteDummyData);</span>
 &nbsp;
 // Branch sub-routes
-<span class="cstat-no" title="statement not covered" >router.get('/:id/branches', authenticate, requirePermission('schools:read'), schoolIdValidator, validate, schoolController.listBranches);</span>
-<span class="cstat-no" title="statement not covered" >router.post('/:id/branches', authenticate, requirePermission('schools:write'), enforceBranchLimit, createBranchValidator, validate, schoolController.createBranch);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/:id/branches', authenticate, enforceTenant(), requirePermission('schools:read'), schoolIdValidator, validate, schoolController.listBranches);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/:id/branches', authenticate, enforceTenant(), requirePermission('schools:write'), enforceBranchLimit, createBranchValidator, validate, schoolController.createBranch);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >module.exports = router;</span>
 &nbsp;</pre></td></tr></table></pre>
@@ -190,7 +190,7 @@ const { enforceBranchLimit } = <span class="cstat-no" title="statement not cover
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T07:01:39.963Z
+                at 2026-06-29T16:53:34.321Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

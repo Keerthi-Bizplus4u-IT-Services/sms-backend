@@ -114,7 +114,10 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,15 +147,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,16 +184,17 @@ const {
 } = <span class="cstat-no" title="statement not covered" >require('../validators/parent.validator');</span>
 const { validate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/validation.middleware');</span>
 const { authenticate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/auth.middleware');</span>
-const { requirePermission } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
+const { requirePermission, enforceTenant } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
 const { uploadParentFiles } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/photo-upload.middleware');</span>
 const { normalizePayload } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/payload-normalizer.middleware');</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >router.get('/', authenticate, getParentsValidator, validate, parentController.getParents);</span>
-<span class="cstat-no" title="statement not covered" >router.post('/sync-student-links', authenticate, requirePermission('parents:write'), syncParentLinksValidator, validate, parentController.syncStudentLinks);</span>
-<span class="cstat-no" title="statement not covered" >router.get('/:id', authenticate, parentIdValidator, validate, parentController.getParentById);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/', authenticate, enforceTenant(), requirePermission('parents:read'), getParentsValidator, validate, parentController.getParents);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/sync-student-links', authenticate, enforceTenant(), requirePermission('parents:write'), syncParentLinksValidator, validate, parentController.syncStudentLinks);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/:id', authenticate, enforceTenant(), requirePermission('parents:read'), parentIdValidator, validate, parentController.getParentById);</span>
 <span class="cstat-no" title="statement not covered" >router.post(</span>
 	'/',
 	authenticate,
+	enforceTenant(),
 	requirePermission('parents:write'),
 	uploadParentFiles,
 	normalizePayload,
@@ -198,6 +205,7 @@ const { normalizePayload } = <span class="cstat-no" title="statement not covered
 <span class="cstat-no" title="statement not covered" >router.post(</span>
 	'/:id/students/:studentId',
 	authenticate,
+	enforceTenant(),
 	requirePermission('parents:write'),
 	linkStudentValidator,
 	validate,
@@ -206,6 +214,7 @@ const { normalizePayload } = <span class="cstat-no" title="statement not covered
 <span class="cstat-no" title="statement not covered" >router.put(</span>
 	'/:id',
 	authenticate,
+	enforceTenant(),
 	requirePermission('parents:write'),
 	uploadParentFiles,
 	normalizePayload,
@@ -213,7 +222,7 @@ const { normalizePayload } = <span class="cstat-no" title="statement not covered
 	validate,
 	parentController.updateParent
 );
-<span class="cstat-no" title="statement not covered" >router.delete('/:id', authenticate, requirePermission('parents:delete'), parentIdValidator, validate, parentController.deleteParent);</span>
+<span class="cstat-no" title="statement not covered" >router.delete('/:id', authenticate, enforceTenant(), requirePermission('parents:delete'), parentIdValidator, validate, parentController.deleteParent);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >module.exports = router;</span>
 &nbsp;</pre></td></tr></table></pre>
@@ -223,7 +232,7 @@ const { normalizePayload } = <span class="cstat-no" title="statement not covered
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T07:01:40.280Z
+                at 2026-06-29T16:53:34.705Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

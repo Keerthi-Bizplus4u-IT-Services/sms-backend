@@ -9,7 +9,7 @@ const {
 } = require('../validators/teacher.validator');
 const { validate } = require('../../../middleware/validation.middleware');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { uploadTeacherFiles } = require('../../../middleware/photo-upload.middleware');
 const { normalizePayload } = require('../../../middleware/payload-normalizer.middleware');
 const { enforceTeacherLimit } = require('../../../middleware/trial-limits.middleware');
@@ -17,6 +17,7 @@ const { enforceTeacherLimit } = require('../../../middleware/trial-limits.middle
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('teachers:read'),
   getTeachersValidator,
   validate,
@@ -26,6 +27,7 @@ router.get(
 router.get(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('teachers:read'),
   teacherIdValidator,
   validate,
@@ -35,6 +37,7 @@ router.get(
 router.post(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('teachers:write'),
   enforceTeacherLimit,
   uploadTeacherFiles,
@@ -47,6 +50,7 @@ router.post(
 router.put(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('teachers:write'),
   uploadTeacherFiles,
   normalizePayload,
@@ -58,6 +62,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('teachers:delete'),
   teacherIdValidator,
   validate,

@@ -69,8 +69,11 @@ const ensureSchoolSettingsStorage = async () => {
 };
 
 const schoolRepository = {
-  async findAll({ includeInactive = false } = {}) {
+  async findAll({ includeInactive = false, schoolId = null } = {}) {
     const where = {};
+    if (schoolId) {
+      where.id = schoolId;
+    }
     if (!includeInactive) {
       where.is_active = true;
     }
@@ -83,6 +86,18 @@ const schoolRepository = {
 
   async findById(id) {
     return School.findByPk(id, {
+      include: [{ model: SchoolBranch, as: 'branches' }]
+    });
+  },
+
+  async findByIdScoped(id, schoolId = null) {
+    const where = { id };
+    if (Number.isInteger(schoolId) && schoolId > 0) {
+      where.id = schoolId;
+    }
+
+    return School.findOne({
+      where,
       include: [{ model: SchoolBranch, as: 'branches' }]
     });
   },
@@ -103,8 +118,31 @@ const schoolRepository = {
     return school.update(data);
   },
 
+  async updateScoped(id, data, schoolId = null) {
+    const where = { id };
+    if (Number.isInteger(schoolId) && schoolId > 0) {
+      where.id = schoolId;
+    }
+
+    const school = await School.findOne({ where });
+    if (!school) return null;
+    return school.update(data);
+  },
+
   async delete(id) {
     const school = await School.findByPk(id);
+    if (!school) return null;
+    await school.destroy();
+    return true;
+  },
+
+  async deleteScoped(id, schoolId = null) {
+    const where = { id };
+    if (Number.isInteger(schoolId) && schoolId > 0) {
+      where.id = schoolId;
+    }
+
+    const school = await School.findOne({ where });
     if (!school) return null;
     await school.destroy();
     return true;

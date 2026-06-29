@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>0/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -150,7 +150,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -192,10 +192,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -203,12 +203,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -225,7 +225,7 @@
  *   - Changes here must be reflected in route middleware and seed data
  */
 &nbsp;
-const REPORT_PERMISSIONS_MATRIX = {
+const REPORT_PERMISSIONS_MATRIX = <span class="cstat-no" title="statement not covered" >{</span>
   // ── Dashboard ──────────────────────────────────────────────────
   'GET /dashboard/summary': {
     permission: 'dashboard:read',
@@ -267,10 +267,10 @@ const REPORT_PERMISSIONS_MATRIX = {
  * @param {string} roleName - e.g. 'admin'
  * @returns {boolean}
  */
-const isRoleAllowed = (endpoint, roleName) =&gt; {
-  const entry = REPORT_PERMISSIONS_MATRIX[endpoint];
-  if (!entry) return false;
-  return entry.allowedRoles.includes(roleName.toLowerCase());
+const isRoleAllowed = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(e</span>ndpoint, roleName) =&gt; {</span>
+  const entry = <span class="cstat-no" title="statement not covered" >REPORT_PERMISSIONS_MATRIX[endpoint];</span>
+<span class="cstat-no" title="statement not covered" >  if (!entry) <span class="cstat-no" title="statement not covered" >return false;</span></span>
+<span class="cstat-no" title="statement not covered" >  return entry.allowedRoles.includes(roleName.toLowerCase());</span>
 };
 &nbsp;
 /**
@@ -278,12 +278,12 @@ const isRoleAllowed = (endpoint, roleName) =&gt; {
  * @param {string} endpoint
  * @returns {string|null}
  */
-const requiredPermission = (endpoint) =&gt; {
-  const entry = REPORT_PERMISSIONS_MATRIX[endpoint];
-  return entry ? entry.permission : null;
+const requiredPermission = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(e</span>ndpoint) =&gt; {</span>
+  const entry = <span class="cstat-no" title="statement not covered" >REPORT_PERMISSIONS_MATRIX[endpoint];</span>
+<span class="cstat-no" title="statement not covered" >  return entry ? entry.permission : null;</span>
 };
 &nbsp;
-module.exports = {
+<span class="cstat-no" title="statement not covered" >module.exports = {</span>
   REPORT_PERMISSIONS_MATRIX,
   isRoleAllowed,
   requiredPermission
@@ -295,7 +295,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T07:01:39.963Z
+                at 2026-06-29T16:53:34.321Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

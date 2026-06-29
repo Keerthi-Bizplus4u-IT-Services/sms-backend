@@ -181,12 +181,12 @@ class SchoolService {
     };
   }
 
-  async listSchools({ includeInactive = false } = {}) {
-    return schoolRepository.findAll({ includeInactive });
+  async listSchools({ includeInactive = false, schoolId = null } = {}) {
+    return schoolRepository.findAll({ includeInactive, schoolId });
   }
 
-  async getSchoolById(id) {
-    const school = await schoolRepository.findById(id);
+  async getSchoolById(id, scope = {}) {
+    const school = await schoolRepository.findByIdScoped(id, scope.schoolId ?? null);
     if (!school) {
       throw new AppError('School not found', 404);
     }
@@ -817,8 +817,8 @@ class SchoolService {
     });
   }
 
-  async updateSchool(id, payload = {}) {
-    const school = await schoolRepository.findById(id);
+  async updateSchool(id, payload = {}, scope = {}) {
+    const school = await schoolRepository.findByIdScoped(id, scope.schoolId ?? null);
     if (!school) {
       throw new AppError('School not found', 404);
     }
@@ -846,7 +846,7 @@ class SchoolService {
       }
     }
 
-    return schoolRepository.update(id, data);
+    return schoolRepository.updateScoped(id, data, scope.schoolId ?? null);
   }
 
   async getSchoolSettings(schoolId) {
@@ -2637,12 +2637,12 @@ class SchoolService {
     });
   }
 
-  async deleteSchool(id) {
-    const school = await schoolRepository.findById(id);
+  async deleteSchool(id, scope = {}) {
+    const school = await schoolRepository.findByIdScoped(id, scope.schoolId ?? null);
     if (!school) {
       throw new AppError('School not found', 404);
     }
-    await schoolRepository.delete(id);
+    await schoolRepository.deleteScoped(id, scope.schoolId ?? null);
     return true;
   }
 }

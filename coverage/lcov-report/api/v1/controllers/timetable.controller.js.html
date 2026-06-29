@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -98,76 +98,76 @@
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a>
 <a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L36'></a><a href='#L36'>36</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const timetableService = require('../services/timetable.service');
-const { success } = require('../../../utils/response');
-const { asyncHandler } = require('../../../middleware/error.middleware');
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const timetableService = <span class="cstat-no" title="statement not covered" >require('../services/timetable.service');</span>
+const { success } = <span class="cstat-no" title="statement not covered" >require('../../../utils/response');</span>
+const { asyncHandler } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/error.middleware');</span>
 &nbsp;
 class TimetableController {
     /**
      * GET /api/v1/all-class
      * Get all class schedules
      */
-    getSchedule = asyncHandler(async (req, res) =&gt; {
-        const results = await timetableService.getSchedule({}, req.user);
-        return success(res, { userData: results }, 'Timetable retrieved successfully', 200);
+    getSchedule = <span class="cstat-no" title="statement not covered" >asyncHandler(<span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
+        const results = <span class="cstat-no" title="statement not covered" >await timetableService.getSchedule({}, req.user);</span>
+<span class="cstat-no" title="statement not covered" >        return success(res, { userData: results }, 'Timetable retrieved successfully', 200);</span>
     });
 &nbsp;
     /**
      * GET /api/v1/my-timetable
      * Get timetable for the current student
      */
-    getMySchedule = asyncHandler(async (req, res) =&gt; {
-        const results = await timetableService.getMySchedule(req.user);
-        return success(res, { userData: results }, 'Timetable retrieved successfully', 200);
+    getMySchedule = <span class="cstat-no" title="statement not covered" >asyncHandler(<span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
+        const results = <span class="cstat-no" title="statement not covered" >await timetableService.getMySchedule(req.user);</span>
+<span class="cstat-no" title="statement not covered" >        return success(res, { userData: results }, 'Timetable retrieved successfully', 200);</span>
     });
 &nbsp;
     /**
      * POST /api/v1/allclasssearch
      * Search class schedules
      */
-    searchSchedule = asyncHandler(async (req, res) =&gt; {
-        const { 'allclass-id': id, 'allclass-name': name, 'allclass-class': className } = req.body;
-        const results = await timetableService.searchSchedule({ id, name, className }, req.user);
-        return success(res, { userData: results }, 'Timetable search results retrieved', 200);
+    searchSchedule = <span class="cstat-no" title="statement not covered" >asyncHandler(<span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
+        const { 'allclass-id': id, 'allclass-name': name, 'allclass-class': className } = <span class="cstat-no" title="statement not covered" >req.body;</span>
+        const results = <span class="cstat-no" title="statement not covered" >await timetableService.searchSchedule({ id, name, className }, req.user);</span>
+<span class="cstat-no" title="statement not covered" >        return success(res, { userData: results }, 'Timetable search results retrieved', 200);</span>
     });
 }
 &nbsp;
-module.exports = new TimetableController();
+<span class="cstat-no" title="statement not covered" >module.exports = new TimetableController();</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -175,7 +175,7 @@ module.exports = new TimetableController();
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T07:01:39.963Z
+                at 2026-06-29T16:53:34.321Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/16</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -106,29 +106,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * Shared scoped-query filter builder.
  * Dynamically adds deleted_at IS NULL, school_id, and branch_id filters
@@ -139,29 +139,29 @@
  * @param {string} [alias] - Optional table alias prefix (e.g. 's' for s.school_id)
  * @returns {{ filters: string[], replacements: object }}
  */
-const buildScopedFilters = (columns, scope = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> alias = '') =&gt; {
-  const filters = [];
-  const replacements = {};
-  const prefix = alias ? `${alias}.` : '';
+const buildScopedFilters = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>olumns, scope = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> alias = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> =&gt; {</span>
+  const filters = <span class="cstat-no" title="statement not covered" >[];</span>
+  const replacements = <span class="cstat-no" title="statement not covered" >{};</span>
+  const prefix = <span class="cstat-no" title="statement not covered" >alias ? `${alias}.` : '';</span>
 &nbsp;
-  if (columns.has('deleted_at')) {
-    filters.push(`${prefix}deleted_at IS NULL`);
+<span class="cstat-no" title="statement not covered" >  if (columns.has('deleted_at')) {</span>
+<span class="cstat-no" title="statement not covered" >    filters.push(`${prefix}deleted_at IS NULL`);</span>
   }
 &nbsp;
-  if (columns.has('school_id') &amp;&amp; Number.isInteger(scope.schoolId) &amp;&amp; scope.schoolId &gt; 0) {
-    filters.push(`${prefix}school_id = :schoolId`);
-    replacements.schoolId = scope.schoolId;
+<span class="cstat-no" title="statement not covered" >  if (columns.has('school_id') &amp;&amp; Number.isInteger(scope.schoolId) &amp;&amp; scope.schoolId &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >    filters.push(`${prefix}school_id = :schoolId`);</span>
+<span class="cstat-no" title="statement not covered" >    replacements.schoolId = scope.schoolId;</span>
   }
 &nbsp;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (columns.has('branch_id') &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >Number.isInteger(scope.branchId) </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >scope.branchId &gt; 0)</span> {
+<span class="cstat-no" title="statement not covered" >  if (columns.has('branch_id') &amp;&amp; Number.isInteger(scope.branchId) &amp;&amp; scope.branchId &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" >    filters.push(`${prefix}branch_id = :branchId`);</span>
 <span class="cstat-no" title="statement not covered" >    replacements.branchId = scope.branchId;</span>
   }
 &nbsp;
-  return { filters, replacements };
+<span class="cstat-no" title="statement not covered" >  return { filters, replacements };</span>
 };
 &nbsp;
-module.exports = { buildScopedFilters };
+<span class="cstat-no" title="statement not covered" >module.exports = { buildScopedFilters };</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -169,7 +169,7 @@ module.exports = { buildScopedFilters };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T07:01:39.963Z
+                at 2026-06-29T16:53:34.321Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

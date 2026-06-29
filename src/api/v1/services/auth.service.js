@@ -7,6 +7,7 @@ const { audit } = require('../../../utils/logger');
 
 const OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
 const REFRESH_TOKEN_EXPIRY_DAYS = 7;
+const ACCESS_TOKEN_CLAIMS_VERSION = 1;
 
 /**
  * Hash a token or OTP using SHA-256
@@ -181,16 +182,50 @@ class AuthService {
    * Generate access token (short-lived JWT)
    */
   generateAccessToken(user) {
+    const tokenId = crypto.randomUUID();
+    const issuer = process.env.JWT_ISSUER;
+    const audience = process.env.JWT_AUDIENCE;
+    const isProduction = String(process.env.NODE_ENV || '').toLowerCase() === 'production';
+
+    if (isProduction && (!issuer || !audience)) {
+      const missing = [];
+      if (!issuer) missing.push('JWT_ISSUER');
+      if (!audience) missing.push('JWT_AUDIENCE');
+      throw new AppError(
+        `Missing JWT signing settings in production: ${missing.join(', ')}`,
+        500
+      );
+    }
+
+    const branchId = user.branch_id || user.school_branch_id || null;
+
+    const signOptions = {
+      expiresIn: process.env.JWT_ACCESS_EXPIRY || '15m',
+      jwtid: tokenId,
+      subject: String(user.id)
+    };
+
+    if (issuer) {
+      signOptions.issuer = issuer;
+    }
+
+    if (audience) {
+      signOptions.audience = audience;
+    }
+
     return jwt.sign(
       {
         userId: user.id,
         email: user.email,
         roleId: user.role_id,
         schoolId: user.school_id || null,
-        type: 'access'
+        tid: user.school_id || null,
+        bid: branchId,
+        type: 'access',
+        ver: ACCESS_TOKEN_CLAIMS_VERSION
       },
       this.getJwtSecret(),
-      { expiresIn: process.env.JWT_ACCESS_EXPIRY || '15m' }
+      signOptions
     );
   }
 

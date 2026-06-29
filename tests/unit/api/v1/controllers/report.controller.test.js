@@ -3,16 +3,25 @@
  */
 
 jest.mock('../../../../../src/api/v1/services/report.service', () => ({
+  dataIntegrityPreview: jest.fn(),
   feeReport: jest.fn(),
   expenseReport: jest.fn(),
   studentReport: jest.fn(),
   financialSummary: jest.fn()
 }));
 jest.mock('../../../../../src/utils/response');
+jest.mock('../../../../../src/api/v1/utils/context', () => ({
+  resolveSchoolIdFromRequest: jest.fn(),
+  parsePositiveInt: jest.fn((v) => {
+    const n = parseInt(v, 10);
+    return Number.isNaN(n) || n <= 0 ? null : n;
+  })
+}));
 
 const reportController = require('../../../../../src/api/v1/controllers/report.controller');
 const reportService = require('../../../../../src/api/v1/services/report.service');
 const { success } = require('../../../../../src/utils/response');
+const { resolveSchoolIdFromRequest, parsePositiveInt } = require('../../../../../src/api/v1/utils/context');
 const { mockRequest, mockResponse } = require('../../../../helpers/testUtils');
 
 describe('ReportController', () => {
@@ -22,8 +31,28 @@ describe('ReportController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     req = mockRequest({ user: { schoolId: 1, roleName: 'admin' } });
+    req.query = { branchId: '2' };
     res = mockResponse();
     success.mockReturnValue(res);
+    resolveSchoolIdFromRequest.mockReturnValue(1);
+    parsePositiveInt.mockImplementation((v) => {
+      const n = parseInt(v, 10);
+      return Number.isNaN(n) || n <= 0 ? null : n;
+    });
+  });
+
+  describe('getDataIntegrityPreview', () => {
+    it('should return data integrity preview with scope', async () => {
+      const data = { orphanStudents: 0, missingParents: 0 };
+      reportService.dataIntegrityPreview.mockResolvedValue(data);
+
+      await reportController.getDataIntegrityPreview(req, res);
+
+      expect(reportService.dataIntegrityPreview).toHaveBeenCalledWith(
+        expect.objectContaining({ schoolId: 1, branchId: 2 })
+      );
+      expect(success).toHaveBeenCalledWith(res, data, 'Data integrity preview generated successfully', 200);
+    });
   });
 
   describe('getFeeReport', () => {
@@ -33,7 +62,9 @@ describe('ReportController', () => {
 
       await reportController.getFeeReport(req, res);
 
-      expect(reportService.feeReport).toHaveBeenCalledTimes(1);
+      expect(reportService.feeReport).toHaveBeenCalledWith(
+        expect.objectContaining({ schoolId: 1, branchId: 2 })
+      );
       expect(success).toHaveBeenCalledWith(res, data, 'Fee report generated successfully', 200);
     });
 
@@ -50,7 +81,9 @@ describe('ReportController', () => {
 
       await reportController.getExpenseReport(req, res);
 
-      expect(reportService.expenseReport).toHaveBeenCalledTimes(1);
+      expect(reportService.expenseReport).toHaveBeenCalledWith(
+        expect.objectContaining({ schoolId: 1, branchId: 2 })
+      );
       expect(success).toHaveBeenCalledWith(res, data, 'Expense report generated successfully', 200);
     });
   });
@@ -62,7 +95,9 @@ describe('ReportController', () => {
 
       await reportController.getStudentReport(req, res);
 
-      expect(reportService.studentReport).toHaveBeenCalledTimes(1);
+      expect(reportService.studentReport).toHaveBeenCalledWith(
+        expect.objectContaining({ schoolId: 1, branchId: 2 })
+      );
       expect(success).toHaveBeenCalledWith(res, data, 'Student report generated successfully', 200);
     });
   });
@@ -74,8 +109,23 @@ describe('ReportController', () => {
 
       await reportController.getFinancialSummary(req, res);
 
-      expect(reportService.financialSummary).toHaveBeenCalledTimes(1);
+      expect(reportService.financialSummary).toHaveBeenCalledWith(
+        expect.objectContaining({ schoolId: 1, branchId: 2 })
+      );
       expect(success).toHaveBeenCalledWith(res, data, 'Financial summary generated successfully', 200);
+    });
+
+    it('should allow super_admin global report scope with null school id', async () => {
+      req.user = { roleName: 'super_admin', schoolId: null };
+      req.query = {};
+      resolveSchoolIdFromRequest.mockReturnValue(null);
+      reportService.financialSummary.mockResolvedValue({ totalIncome: 10, totalExpenditure: 5, netBalance: 5, feeBreakdown: [], expenseBreakdown: [] });
+
+      await reportController.getFinancialSummary(req, res);
+
+      expect(reportService.financialSummary).toHaveBeenCalledWith(
+        expect.objectContaining({ schoolId: null, branchId: null })
+      );
     });
   });
 });
