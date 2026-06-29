@@ -37,7 +37,7 @@ describe('EmployeeController', () => {
 
       await employeeController.getEmployees(req, res, next);
 
-      expect(employeeService.getEmployees).toHaveBeenCalledWith(req.query);
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(req.query, 1);
       expect(success).toHaveBeenCalledWith(res, expect.any(Object), 'Employees retrieved successfully', 200);
     });
   });
@@ -73,7 +73,7 @@ describe('EmployeeController', () => {
 
       expect(employeeService.createEmployee).toHaveBeenCalledWith(
         req.body,
-        { photoUrl: 'https://cdn.example.com/photo.jpg' }
+        { photoUrl: 'https://cdn.example.com/photo.jpg', aadharUrl: null, panUrl: null }
       );
       expect(success).toHaveBeenCalledWith(
         res,

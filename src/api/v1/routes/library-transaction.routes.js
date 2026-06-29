@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/library-transaction.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const {
   transactionFilterValidator, transactionIdValidator,
   issueBookValidator, returnBookValidator,
@@ -14,6 +14,7 @@ const { validate } = require('../../../middleware/validation.middleware');
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('library:read'),
   transactionFilterValidator,
   validate,
@@ -24,6 +25,7 @@ router.get(
 router.get(
   '/overdue',
   authenticate,
+  enforceTenant(),
   requirePermission('library:read'),
   controller.getOverdueBooks
 );
@@ -32,6 +34,7 @@ router.get(
 router.get(
   '/borrower/:type/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('library:read'),
   borrowerHistoryValidator,
   validate,
@@ -42,6 +45,7 @@ router.get(
 router.get(
   '/:id/fine-preview',
   authenticate,
+  enforceTenant(),
   requirePermission('library:read'),
   transactionIdValidator,
   validate,
@@ -52,6 +56,7 @@ router.get(
 router.get(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('library:read'),
   transactionIdValidator,
   validate,
@@ -62,6 +67,7 @@ router.get(
 router.post(
   '/issue',
   authenticate,
+  enforceTenant(),
   requirePermission('library:issue'),
   issueBookValidator,
   validate,
@@ -72,6 +78,7 @@ router.post(
 router.post(
   '/:id/return',
   authenticate,
+  enforceTenant(),
   requirePermission('library:return'),
   returnBookValidator,
   validate,
@@ -82,6 +89,7 @@ router.post(
 router.post(
   '/:id/renew',
   authenticate,
+  enforceTenant(),
   requirePermission('library:renew'),
   renewBookValidator,
   validate,
@@ -92,6 +100,7 @@ router.post(
 router.post(
   '/:id/pay-fine',
   authenticate,
+  enforceTenant(),
   requirePermission('library:fine'),
   payFineValidator,
   validate,

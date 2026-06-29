@@ -1,6 +1,6 @@
 /**
  * Unit Tests for RBAC Middleware
- * Tests permission-based access control including admin bypass
+ * Tests permission-based access control and tenant enforcement behavior
  */
 
 const {
@@ -34,15 +34,15 @@ describe('RBAC Middleware', () => {
   });
 
   describe('requirePermission', () => {
-    it('should allow admin to bypass permission checks', () => {
+    it('should deny admin without matching permission', () => {
       req.user = { id: 1, roleName: 'admin', permissions: [] };
 
       const middleware = requirePermission('dashboard:read');
       middleware(req, res, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
       const { error } = require('../../../src/utils/response');
-      expect(error).not.toHaveBeenCalled();
+      expect(error).toHaveBeenCalledWith(res, 'You do not have permission to perform this action', 403);
     });
 
     it('should allow super_admin to bypass permission checks', () => {
@@ -107,14 +107,15 @@ describe('RBAC Middleware', () => {
       expect(error).toHaveBeenCalledWith(res, 'You do not have permission to perform this action', 403);
     });
 
-    it('should allow admin with ADMIN (uppercase) role name normalized to lowercase', () => {
-      // Simulates the auth middleware normalizing 'ADMIN' -> 'admin'
+    it('should deny admin with normalized role when permission is missing', () => {
       req.user = { id: 1, roleName: 'admin', permissions: [] };
 
       const middleware = requirePermission('communications:read');
       middleware(req, res, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
+      const { error } = require('../../../src/utils/response');
+      expect(error).toHaveBeenCalledWith(res, 'You do not have permission to perform this action', 403);
     });
 
     it('should check specific permission names exactly', () => {
@@ -128,13 +129,15 @@ describe('RBAC Middleware', () => {
   });
 
   describe('requireAnyPermission', () => {
-    it('should allow admin to bypass', () => {
+    it('should deny admin when none of the required permissions match', () => {
       req.user = { id: 1, roleName: 'admin', permissions: [] };
 
       const middleware = requireAnyPermission(['dashboard:read', 'communications:read']);
       middleware(req, res, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
+      const { error } = require('../../../src/utils/response');
+      expect(error).toHaveBeenCalledWith(res, 'You do not have permission to perform this action', 403);
     });
 
     it('should allow super_admin to bypass', () => {
@@ -179,13 +182,15 @@ describe('RBAC Middleware', () => {
   });
 
   describe('requireAllPermissions', () => {
-    it('should allow admin to bypass', () => {
+    it('should deny admin missing required permissions', () => {
       req.user = { id: 1, roleName: 'admin', permissions: [] };
 
       const middleware = requireAllPermissions(['dashboard:read', 'students:read']);
       middleware(req, res, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
+      const { error } = require('../../../src/utils/response');
+      expect(error).toHaveBeenCalledWith(res, 'You do not have permission to perform this action', 403);
     });
 
     it('should allow user with all required permissions', () => {
@@ -210,14 +215,16 @@ describe('RBAC Middleware', () => {
   });
 
   describe('checkOwnership', () => {
-    it('should allow admin to access any resource', () => {
+    it('should deny admin from accessing another user resource', () => {
       req.user = { id: 1, roleName: 'admin' };
       req.params = { userId: '99' };
 
       const middleware = checkOwnership('userId');
       middleware(req, res, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
+      const { error } = require('../../../src/utils/response');
+      expect(error).toHaveBeenCalledWith(res, 'You can only access your own resources', 403);
     });
 
     it('should allow user to access their own resource', () => {
@@ -254,14 +261,14 @@ describe('RBAC Middleware', () => {
       expect(next).toHaveBeenCalled();
     });
 
-    it('should allow super_admin to scope via query param', () => {
+    it('should set null schoolId for super_admin even when query param is present', () => {
       req.user = { id: 1, roleName: 'super_admin' };
       req.query = { schoolId: '7' };
 
       const middleware = enforceTenant();
       middleware(req, res, next);
 
-      expect(req.schoolId).toBe(7);
+      expect(req.schoolId).toBeNull();
       expect(next).toHaveBeenCalled();
     });
 

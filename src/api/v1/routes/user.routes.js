@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/user.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { getUsersValidator } = require('../validators/user.validator');
 const { validate } = require('../../../middleware/validation.middleware');
 
@@ -11,6 +11,6 @@ const { validate } = require('../../../middleware/validation.middleware');
  */
 
 // GET /api/v1/users — list all users
-router.get('/users', authenticate, requirePermission('users:read'), getUsersValidator, validate, userController.getUsers);
+router.get('/users', authenticate, enforceTenant(), requirePermission('users:read'), getUsersValidator, validate, userController.getUsers);
 
 module.exports = router;

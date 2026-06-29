@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/library-settings.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const {
   upsertSettingsValidator, createFineRuleValidator,
   updateFineRuleValidator, fineRuleIdValidator
@@ -13,6 +13,7 @@ const { validate } = require('../../../middleware/validation.middleware');
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('library:settings'),
   controller.getSettings
 );
@@ -20,6 +21,7 @@ router.get(
 router.put(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('library:settings'),
   upsertSettingsValidator,
   validate,
@@ -30,6 +32,7 @@ router.put(
 router.get(
   '/fine-rules',
   authenticate,
+  enforceTenant(),
   requirePermission('library:settings'),
   controller.getFineRules
 );
@@ -37,6 +40,7 @@ router.get(
 router.post(
   '/fine-rules',
   authenticate,
+  enforceTenant(),
   requirePermission('library:settings'),
   createFineRuleValidator,
   validate,
@@ -46,6 +50,7 @@ router.post(
 router.put(
   '/fine-rules/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('library:settings'),
   updateFineRuleValidator,
   validate,
@@ -55,6 +60,7 @@ router.put(
 router.delete(
   '/fine-rules/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('library:settings'),
   fineRuleIdValidator,
   validate,

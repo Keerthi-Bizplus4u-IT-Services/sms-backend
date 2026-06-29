@@ -45,7 +45,7 @@ Status legend:
 
 | Domain | Method | Path | Source File | Auth | Capability Gate | Tenant Scope | Super Admin Mode | Object Scope Check | Service Scope Enforced | Negative Test | Audit Event | Priority | Owner | Status | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| auth | GET | /api/v1/auth/me | src/api/v1/routes/auth.routes.js | yes | authenticated user | required | global-read | no | yes | no | yes | P0 | Identity Team | in-progress | req.authContext added with token metadata and tenant mismatch auditing |
+| auth | GET | /api/v1/auth/me | src/api/v1/routes/auth.routes.js | yes | authenticated user | required | global-read | no | yes | yes | yes | P0 | Identity Team | in-progress | req.authContext added with token metadata and tenant mismatch auditing; tenant mismatch deny test covers /api/v1/auth/me |
 | students | GET | /api/v1/students | src/api/v1/routes/student.routes.js | yes | permission/role | required | tenant-selected-write | no | yes | yes | yes | P0 | Student Domain | in-progress | enforceTenant wired; auth middleware mismatch denial covered for route family |
 | students | GET | /api/v1/students/:id | src/api/v1/routes/student.routes.js | yes | permission/role | required | tenant-selected-write | yes | yes | yes | yes | P0 | Student Domain | in-progress | enforceTenant wired; cross-tenant mismatch deny covered at auth layer |
 | students | POST | /api/v1/students | src/api/v1/routes/student.routes.js | yes | permission/role | required | tenant-selected-write | no | yes | yes | yes | P0 | Student Domain | in-progress | enforceTenant wired and context util hardened |
@@ -67,24 +67,24 @@ Populate one row per route definition from each file.
 
 | Module | Route File | Mounted Prefix | Priority | Owner | Status |
 |---|---|---|---|---|---|
-| classes | src/api/v1/routes/class.routes.js | /api/v1/classes | P1 | Academic Domain | not-started |
-| sections | src/api/v1/routes/section.routes.js | /api/v1/sections | P1 | Academic Domain | not-started |
-| subjects | src/api/v1/routes/subject.routes.js | /api/v1/subjects | P1 | Academic Domain | not-started |
-| academic-years | src/api/v1/routes/academic-year.routes.js | /api/v1/academic-years | P1 | Academic Domain | not-started |
-| attendance | src/api/v1/routes/attendance.routes.js | /api/v1/* | P1 | Academic Domain | not-started |
-| marks | src/api/v1/routes/mark.routes.js | /api/v1/* | P1 | Academic Domain | not-started |
-| exams | src/api/v1/routes/exam.routes.js | /api/v1/exams | P1 | Academic Domain | not-started |
-| exam-schedule | src/api/v1/routes/exam-schedule.routes.js | /api/v1/* | P1 | Academic Domain | not-started |
-| dashboard | src/api/v1/routes/dashboard.routes.js | /api/v1/dashboard | P1 | Reporting Domain | not-started |
-| users | src/api/v1/routes/user.routes.js | /api/v1/* | P1 | Admin Domain | not-started |
-| roles | src/api/v1/routes/role.routes.js | /api/v1/roles | P1 | Admin Domain | not-started |
-| permissions | src/api/v1/routes/permission.routes.js | /api/v1/permissions | P1 | Admin Domain | not-started |
-| communication | src/api/v1/routes/communication.routes.js | /api/v1/* | P1 | Engagement Domain | not-started |
-| uploads | src/api/v1/routes/upload.routes.js | /api/v1/uploads | P1 | Platform Team | not-started |
-| library transactions | src/api/v1/routes/library-transaction.routes.js | /api/v1/library/transactions | P1 | Library Domain | not-started |
-| library settings | src/api/v1/routes/library-settings.routes.js | /api/v1/library/settings | P1 | Library Domain | not-started |
-| employee | src/api/v1/routes/employee.routes.js | /api/v1/employees | P1 | HR Domain | not-started |
-| inventory | src/api/v1/routes/inventory.routes.js | /api/v1/inventory | P1 | Ops Domain | not-started |
+| classes | src/api/v1/routes/class.routes.js | /api/v1/classes | P1 | Academic Domain | in-progress |
+| sections | src/api/v1/routes/section.routes.js | /api/v1/sections | P1 | Academic Domain | in-progress |
+| subjects | src/api/v1/routes/subject.routes.js | /api/v1/subjects | P1 | Academic Domain | in-progress |
+| academic-years | src/api/v1/routes/academic-year.routes.js | /api/v1/academic-years | P1 | Academic Domain | in-progress |
+| attendance | src/api/v1/routes/attendance.routes.js | /api/v1/* | P1 | Academic Domain | in-progress |
+| marks | src/api/v1/routes/mark.routes.js | /api/v1/* | P1 | Academic Domain | in-progress |
+| exams | src/api/v1/routes/exam.routes.js | /api/v1/exams | P1 | Academic Domain | in-progress |
+| exam-schedule | src/api/v1/routes/exam-schedule.routes.js | /api/v1/* | P1 | Academic Domain | in-progress |
+| dashboard | src/api/v1/routes/dashboard.routes.js | /api/v1/dashboard | P1 | Reporting Domain | in-progress |
+| users | src/api/v1/routes/user.routes.js | /api/v1/* | P1 | Admin Domain | in-progress |
+| roles | src/api/v1/routes/role.routes.js | /api/v1/roles | P1 | Admin Domain | in-progress |
+| permissions | src/api/v1/routes/permission.routes.js | /api/v1/permissions | P1 | Admin Domain | in-progress |
+| communication | src/api/v1/routes/communication.routes.js | /api/v1/* | P1 | Engagement Domain | in-progress |
+| uploads | src/api/v1/routes/upload.routes.js | /api/v1/uploads | P1 | Platform Team | in-progress |
+| library transactions | src/api/v1/routes/library-transaction.routes.js | /api/v1/library/transactions | P1 | Library Domain | in-progress |
+| library settings | src/api/v1/routes/library-settings.routes.js | /api/v1/library/settings | P1 | Library Domain | in-progress |
+| employee | src/api/v1/routes/employee.routes.js | /api/v1/employees | P1 | HR Domain | in-progress |
+| inventory | src/api/v1/routes/inventory.routes.js | /api/v1/inventory | P1 | Ops Domain | in-progress |
 
 ## P2 Route Modules (Fill Per Endpoint)
 

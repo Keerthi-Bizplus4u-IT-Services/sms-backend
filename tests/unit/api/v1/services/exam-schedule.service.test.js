@@ -30,7 +30,7 @@ describe('ExamScheduleService', () => {
 
     const result = await examScheduleService.getExamSchedules({}, { schoolId: 3 });
 
-    expect(examScheduleRepository.findAll).toHaveBeenCalledWith({ schoolId: 3, academicYearId: 7 });
+    expect(examScheduleRepository.findAll).toHaveBeenCalledWith({ schoolId: 3, academicYearId: 7, classIds: null });
     expect(result).toEqual([{ id: 1, ename: 'Mid Term' }]);
   });
 

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const academicYearController = require('../controllers/academic-year.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { validate } = require('../../../middleware/validation.middleware');
 const {
   createAcademicYearValidator,
@@ -16,6 +16,7 @@ const {
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('academic-years:read'),
   listAcademicYearValidator,
   validate,
@@ -25,6 +26,7 @@ router.get(
 router.get(
   '/current',
   authenticate,
+  enforceTenant(),
   requirePermission('academic-years:read'),
   academicYearController.getCurrentAcademicYear
 );
@@ -32,6 +34,7 @@ router.get(
 router.post(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('academic-years:write'),
   createAcademicYearValidator,
   validate,
@@ -41,6 +44,7 @@ router.post(
 router.put(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('academic-years:write'),
   updateAcademicYearValidator,
   validate,
@@ -50,6 +54,7 @@ router.put(
 router.patch(
   '/:id/set-current',
   authenticate,
+  enforceTenant(),
   requirePermission('academic-years:write'),
   academicYearIdParamValidator,
   validate,
@@ -59,6 +64,7 @@ router.patch(
 router.post(
   '/migration/draft',
   authenticate,
+  enforceTenant(),
   requirePermission('academic-years:write'),
   migrationDraftValidator,
   validate,
@@ -68,6 +74,7 @@ router.post(
 router.post(
   '/migration/finalize',
   authenticate,
+  enforceTenant(),
   requirePermission('academic-years:write'),
   migrationFinalizeValidator,
   validate,

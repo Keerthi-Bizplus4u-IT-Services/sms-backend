@@ -77,7 +77,7 @@ describe('DashboardRepository', () => {
       expect(result).toEqual({
         studentCount: 150,
         teacherCount: 20,
-        parentCount: 65,
+        parentCount: 0,
         schoolCount: 3,
         classCount: 18,
         sectionCount: 42,

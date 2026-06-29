@@ -48,8 +48,8 @@ const requirePermission = (permissionName) => {
 
     const currentRole = normalizeRoleName(req.user.roleName);
 
-    // super_admin and admin bypass all permission checks
-    if (currentRole === 'super_admin' || currentRole === 'admin') return next();
+    // super_admin bypasses permission checks
+    if (currentRole === 'super_admin') return next();
 
     const userPerms = req.user.permissions || [];
     if (!userPerms.includes(permissionName)) {
@@ -71,7 +71,7 @@ const requireAnyPermission = (permissionNames = []) => {
     }
 
     const currentRole = normalizeRoleName(req.user.roleName);
-    if (currentRole === 'super_admin' || currentRole === 'admin') return next();
+    if (currentRole === 'super_admin') return next();
 
     const userPerms = req.user.permissions || [];
     const hasAny = permissionNames.some(p => userPerms.includes(p));
@@ -94,7 +94,7 @@ const requireAllPermissions = (permissionNames = []) => {
     }
 
     const currentRole = normalizeRoleName(req.user.roleName);
-    if (currentRole === 'super_admin' || currentRole === 'admin') return next();
+    if (currentRole === 'super_admin') return next();
 
     const userPerms = req.user.permissions || [];
     const hasAll = permissionNames.every(p => userPerms.includes(p));
@@ -108,7 +108,7 @@ const requireAllPermissions = (permissionNames = []) => {
 
 /**
  * Check resource ownership.
- * Admin and super_admin can access any resource; others must own it.
+ * super_admin can access any resource; others must own it.
  * @param {string} userIdField - The param/body field containing the owner user ID
  */
 const checkOwnership = (userIdField = 'userId') => {
@@ -118,7 +118,7 @@ const checkOwnership = (userIdField = 'userId') => {
     }
 
     const role = normalizeRoleName(req.user.roleName);
-    if (role === 'super_admin' || role === 'admin') return next();
+    if (role === 'super_admin') return next();
 
     const resourceUserId = req.params[userIdField] || req.body[userIdField];
     if (!resourceUserId) {

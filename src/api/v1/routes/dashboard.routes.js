@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const dashboardController = require('../controllers/dashboard.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { dashboardQueryValidator, setupStatusValidator } = require('../validators/dashboard.validator');
 const { validate } = require('../../../middleware/validation.middleware');
 
 router.get(
   '/summary',
   authenticate,
+  enforceTenant(),
   requirePermission('dashboard:read'),
   dashboardQueryValidator,
   validate,
@@ -18,6 +19,7 @@ router.get(
 router.get(
   '/gender-counts',
   authenticate,
+  enforceTenant(),
   requirePermission('dashboard:read'),
   dashboardQueryValidator,
   validate,
@@ -27,6 +29,7 @@ router.get(
 router.get(
   '/library-summary',
   authenticate,
+  enforceTenant(),
   requirePermission('dashboard:read'),
   dashboardQueryValidator,
   validate,
@@ -36,6 +39,7 @@ router.get(
 router.get(
   '/setup-status',
   authenticate,
+  enforceTenant(),
   requirePermission('dashboard:read'),
   setupStatusValidator,
   validate,

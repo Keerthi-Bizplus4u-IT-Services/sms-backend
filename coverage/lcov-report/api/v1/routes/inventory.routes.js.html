@@ -117,7 +117,12 @@
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -127,14 +132,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -152,6 +149,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,7 +169,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -175,13 +185,14 @@
 const router = <span class="cstat-no" title="statement not covered" >express.Router();</span>
 const inventoryController = <span class="cstat-no" title="statement not covered" >require('../controllers/inventory.controller');</span>
 const { authenticate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/auth.middleware');</span>
-const { requirePermission } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
+const { requirePermission, enforceTenant } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
 const { getInventoryValidator, inventoryIdValidator, createInventoryValidator, updateInventoryValidator } = <span class="cstat-no" title="statement not covered" >require('../validators/inventory.validator');</span>
 const { validate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/validation.middleware');</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >router.get(</span>
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('inventory:read'),
   getInventoryValidator,
   validate,
@@ -191,6 +202,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
 <span class="cstat-no" title="statement not covered" >router.get(</span>
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('inventory:read'),
   inventoryIdValidator,
   validate,
@@ -200,6 +212,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
 <span class="cstat-no" title="statement not covered" >router.post(</span>
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('inventory:create'),
   createInventoryValidator,
   validate,
@@ -209,6 +222,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
 <span class="cstat-no" title="statement not covered" >router.put(</span>
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('inventory:update'),
   updateInventoryValidator,
   validate,
@@ -218,6 +232,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
 <span class="cstat-no" title="statement not covered" >router.delete(</span>
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('inventory:delete'),
   inventoryIdValidator,
   validate,
@@ -232,7 +247,7 @@ const { validate } = <span class="cstat-no" title="statement not covered" >requi
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-29T16:53:34.321Z
+                at 2026-06-29T17:21:46.326Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

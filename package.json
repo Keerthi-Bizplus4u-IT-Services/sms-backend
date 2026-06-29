@@ -19,7 +19,9 @@
     "seed:staff": "node scripts/seed-staff-only.js",
     "seed:default-school": "node scripts/seed-default-school.js",
     "db:init-postgres": "node scripts/init-postgres-and-seed.js",
-    "db:run-sql": "node scripts/run-sql-file.js"
+    "db:run-sql": "node scripts/run-sql-file.js",
+    "tenant:policy:check": "node scripts/check-tenant-policy-matrix.js",
+    "tenant:policy:check:all": "node scripts/check-tenant-policy-matrix.js --priorities=P0,P1,P2"
   },
   "author": "Srikanth",
   "license": "ISC",

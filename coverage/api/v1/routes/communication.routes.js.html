@@ -134,20 +134,20 @@ const {
 } = <span class="cstat-no" title="statement not covered" >require('../validators/communication.validator');</span>
 const { validate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/validation.middleware');</span>
 const { authenticate } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/auth.middleware');</span>
-const { requirePermission, authorize } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
+const { requirePermission, authorize, enforceTenant } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/rbac.middleware');</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >router.get('/notices', authenticate, requirePermission('communications:read'), listCommunicationsValidator, validate, communicationController.getNotices);</span>
-<span class="cstat-no" title="statement not covered" >router.get('/notices/unread-count', authenticate, requirePermission('communications:read'), communicationController.getUnreadNoticeCount);</span>
-<span class="cstat-no" title="statement not covered" >router.get('/notices/unread', authenticate, requirePermission('communications:read'), communicationController.getUnreadNotices);</span>
-<span class="cstat-no" title="statement not covered" >router.get('/notices/:nid', authenticate, requirePermission('communications:read'), noticeIdValidator, validate, communicationController.getNoticeById);</span>
-<span class="cstat-no" title="statement not covered" >router.post('/notices', authenticate, requirePermission('communications:write'), createNoticeValidator, validate, communicationController.createNotice);</span>
-<span class="cstat-no" title="statement not covered" >router.put('/notices/:nid', authenticate, requirePermission('communications:write'), noticeIdValidator, updateNoticeValidator, validate, communicationController.updateNotice);</span>
-<span class="cstat-no" title="statement not covered" >router.delete('/notices/:nid', authenticate, requirePermission('communications:delete'), noticeIdValidator, validate, communicationController.deleteNotice);</span>
-<span class="cstat-no" title="statement not covered" >router.post('/notices/:nid/read', authenticate, requirePermission('communications:read'), noticeIdValidator, validate, communicationController.markNoticeRead);</span>
-<span class="cstat-no" title="statement not covered" >router.get('/events', authenticate, requirePermission('communications:read'), listCommunicationsValidator, validate, communicationController.getEvents);</span>
-<span class="cstat-no" title="statement not covered" >router.get('/events/registrations', authenticate, authorize(['student', 'parent']), listCommunicationsValidator, validate, communicationController.getMyEventRegistrations);</span>
-<span class="cstat-no" title="statement not covered" >router.post('/events/attend', authenticate, authorize(['student', 'parent']), attendEventValidator, validate, communicationController.attendEvent);</span>
-<span class="cstat-no" title="statement not covered" >router.post('/attendevent', authenticate, authorize(['student', 'parent']), attendEventValidator, validate, communicationController.attendEvent);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/notices', authenticate, enforceTenant(), requirePermission('communications:read'), listCommunicationsValidator, validate, communicationController.getNotices);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/notices/unread-count', authenticate, enforceTenant(), requirePermission('communications:read'), communicationController.getUnreadNoticeCount);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/notices/unread', authenticate, enforceTenant(), requirePermission('communications:read'), communicationController.getUnreadNotices);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/notices/:nid', authenticate, enforceTenant(), requirePermission('communications:read'), noticeIdValidator, validate, communicationController.getNoticeById);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/notices', authenticate, enforceTenant(), requirePermission('communications:write'), createNoticeValidator, validate, communicationController.createNotice);</span>
+<span class="cstat-no" title="statement not covered" >router.put('/notices/:nid', authenticate, enforceTenant(), requirePermission('communications:write'), noticeIdValidator, updateNoticeValidator, validate, communicationController.updateNotice);</span>
+<span class="cstat-no" title="statement not covered" >router.delete('/notices/:nid', authenticate, enforceTenant(), requirePermission('communications:delete'), noticeIdValidator, validate, communicationController.deleteNotice);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/notices/:nid/read', authenticate, enforceTenant(), requirePermission('communications:read'), noticeIdValidator, validate, communicationController.markNoticeRead);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/events', authenticate, enforceTenant(), requirePermission('communications:read'), listCommunicationsValidator, validate, communicationController.getEvents);</span>
+<span class="cstat-no" title="statement not covered" >router.get('/events/registrations', authenticate, enforceTenant(), authorize(['student', 'parent']), listCommunicationsValidator, validate, communicationController.getMyEventRegistrations);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/events/attend', authenticate, enforceTenant(), authorize(['student', 'parent']), attendEventValidator, validate, communicationController.attendEvent);</span>
+<span class="cstat-no" title="statement not covered" >router.post('/attendevent', authenticate, enforceTenant(), authorize(['student', 'parent']), attendEventValidator, validate, communicationController.attendEvent);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >module.exports = router;</span>
 &nbsp;</pre></td></tr></table></pre>
@@ -157,7 +157,7 @@ const { requirePermission, authorize } = <span class="cstat-no" title="statement
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-29T16:53:34.705Z
+                at 2026-06-29T17:21:46.743Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

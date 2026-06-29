@@ -194,6 +194,7 @@ describe('Auth Middleware', () => {
     });
 
     it.each([
+      '/api/v1/auth/me',
       '/api/v1/students',
       '/api/v1/teachers',
       '/api/v1/parents',

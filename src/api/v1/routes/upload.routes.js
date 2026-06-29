@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const uploadController = require('../controllers/upload.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
+const { enforceTenant } = require('../../../middleware/rbac.middleware');
 const { uploadGenericDocument } = require('../../../middleware/photo-upload.middleware');
 
 /**
@@ -17,6 +18,8 @@ const { uploadGenericDocument } = require('../../../middleware/photo-upload.midd
  */
 router.get(
   '/proxy',
+  authenticate,
+  enforceTenant(),
   uploadController.proxyFile
 );
 
@@ -29,6 +32,7 @@ router.get(
 router.post(
   '/document',
   authenticate,
+  enforceTenant(),
   uploadGenericDocument,
   uploadController.uploadDocument
 );

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const attendanceController = require('../controllers/attendance.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { authorize } = require('../../../middleware/rbac.middleware');
+const { authorize, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { getAttendanceValidator, saveAttendanceValidator } = require('../validators/attendance.validator');
 const { validate } = require('../../../middleware/validation.middleware');
 
@@ -14,6 +14,7 @@ const { validate } = require('../../../middleware/validation.middleware');
 router.post(
   '/getattendence',
   authenticate,
+  enforceTenant(),
   authorize(['admin', 'teacher', 'student', 'parent']),
   getAttendanceValidator,
   validate,
@@ -24,6 +25,7 @@ router.post(
 router.post(
   '/saveattendance',
   authenticate,
+  enforceTenant(),
   authorize(['admin', 'teacher']),
   saveAttendanceValidator,
   validate,
@@ -34,6 +36,7 @@ router.post(
 router.post(
   '/addattendance',
   authenticate,
+  enforceTenant(),
   authorize(['admin', 'teacher']),
   saveAttendanceValidator,
   validate,

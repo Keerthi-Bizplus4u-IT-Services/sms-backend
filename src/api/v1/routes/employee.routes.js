@@ -3,7 +3,7 @@ const router = express.Router();
 const employeeController = require('../controllers/employee.controller');
 const employeeRoleController = require('../controllers/employee-role.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const {
   getEmployeesValidator,
   employeeIdValidator,
@@ -17,6 +17,7 @@ const { normalizePayload } = require('../../../middleware/payload-normalizer.mid
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:read'),
   getEmployeesValidator,
   validate,
@@ -26,6 +27,7 @@ router.get(
 router.get(
   '/:eid',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:read'),
   employeeIdValidator,
   validate,
@@ -35,6 +37,7 @@ router.get(
 router.post(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:write'),
   uploadEmployeeFiles,
   normalizePayload,
@@ -46,6 +49,7 @@ router.post(
 router.put(
   '/:eid',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:write'),
   uploadEmployeeFiles,
   normalizePayload,
@@ -57,6 +61,7 @@ router.put(
 router.delete(
   '/:eid',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:delete'),
   employeeIdValidator,
   validate,
@@ -69,6 +74,7 @@ router.delete(
 router.get(
   '/roles/allowed',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:read'),
   employeeRoleController.getAllowedRoles
 );
@@ -77,6 +83,7 @@ router.get(
 router.get(
   '/role-assignments',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:read'),
   employeeRoleController.getAllWithRoles
 );
@@ -85,6 +92,7 @@ router.get(
 router.get(
   '/:eid/roles',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:read'),
   employeeRoleController.getEmployeeRoles
 );
@@ -93,6 +101,7 @@ router.get(
 router.post(
   '/:eid/roles',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:write'),
   employeeRoleController.assignRole
 );
@@ -101,6 +110,7 @@ router.post(
 router.delete(
   '/:eid/roles/:roleName',
   authenticate,
+  enforceTenant(),
   requirePermission('employees:write'),
   employeeRoleController.removeRole
 );

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const examScheduleController = require('../controllers/exam-schedule.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { authorize, requirePermission } = require('../../../middleware/rbac.middleware');
+const { authorize, requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { validate } = require('../../../middleware/validation.middleware');
 const {
   listExamSchedulesValidator,
@@ -13,6 +13,7 @@ const {
 router.get(
   '/exam-schedules',
   authenticate,
+  enforceTenant(),
   authorize(['admin', 'principal', 'exam_incharge', 'teacher', 'student', 'parent']),
   listExamSchedulesValidator,
   validate,
@@ -22,6 +23,7 @@ router.get(
 router.post(
   '/examschedule',
   authenticate,
+  enforceTenant(),
   authorize(['admin', 'principal', 'exam_incharge']),
   createLegacyExamScheduleValidator,
   validate,
@@ -31,6 +33,7 @@ router.post(
 router.delete(
   '/delete-exam-schedule/:id',
   authenticate,
+  enforceTenant(),
   authorize(['admin', 'principal', 'exam_incharge']),
   deleteLegacyExamScheduleValidator,
   validate,
