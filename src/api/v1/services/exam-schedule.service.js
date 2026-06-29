@@ -279,10 +279,10 @@ class ExamScheduleService {
     });
 
     if (existingSchedule) {
-      return examScheduleRepository.update(existingSchedule.id, schedulePayload);
+      return examScheduleRepository.update(existingSchedule.id, schedulePayload, schoolId);
     }
 
-    return examScheduleRepository.create(schedulePayload);
+    return examScheduleRepository.create(schedulePayload, schoolId);
   }
 
   async deleteLegacySchedule(id, context = {}) {

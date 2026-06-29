@@ -15,7 +15,7 @@ describe('PermissionController', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    req = mockRequest();
+    req = mockRequest({ user: { roleName: 'super_admin' } });
     res = mockResponse();
     next = mockNext();
     success.mockReturnValue(res);
@@ -28,7 +28,7 @@ describe('PermissionController', () => {
 
       await permissionController.listPermissions(req, res, next);
 
-      expect(permissionService.listPermissions).toHaveBeenCalled();
+      expect(permissionService.listPermissions).toHaveBeenCalledWith(req);
       expect(success).toHaveBeenCalledWith(res, permissions, 'Permissions retrieved successfully');
     });
 
@@ -50,7 +50,7 @@ describe('PermissionController', () => {
 
       await permissionController.getRolePermissions(req, res, next);
 
-      expect(permissionService.getRolePermissions).toHaveBeenCalledWith('1');
+      expect(permissionService.getRolePermissions).toHaveBeenCalledWith('1', req);
       expect(success).toHaveBeenCalledWith(res, data, 'Role permissions retrieved successfully');
     });
 
@@ -72,7 +72,7 @@ describe('PermissionController', () => {
 
       await permissionController.assignPermissionsToRole(req, res, next);
 
-      expect(permissionService.assignPermissionsToRole).toHaveBeenCalledWith('1', [1, 2, 3]);
+      expect(permissionService.assignPermissionsToRole).toHaveBeenCalledWith('1', [1, 2, 3], req);
       expect(success).toHaveBeenCalledWith(res, expect.any(Object), 'Permissions assigned successfully');
     });
 

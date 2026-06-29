@@ -11,8 +11,8 @@ class EmployeeRoleService {
     }));
   }
 
-  async getEmployeeRoles(employeeId) {
-    return employeeRoleRepository.getAssignmentsForEmployee(employeeId);
+  async getEmployeeRoles(employeeId, schoolId) {
+    return employeeRoleRepository.getAssignmentsForEmployee(employeeId, schoolId);
   }
 
   async getSchoolRoleAssignments(schoolId) {
@@ -27,8 +27,8 @@ class EmployeeRoleService {
     return employeeRoleRepository.assignRole(employeeId, roleName, schoolId, assignedBy);
   }
 
-  async removeRole(employeeId, roleName) {
-    return employeeRoleRepository.removeRole(employeeId, roleName);
+  async removeRole(employeeId, roleName, schoolId) {
+    return employeeRoleRepository.removeRole(employeeId, roleName, schoolId);
   }
 }
 

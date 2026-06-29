@@ -49,7 +49,7 @@ describe('ParentController', () => {
 
       await parentController.getParents(req, res, next);
 
-      expect(parentService.getParents).toHaveBeenCalledWith({ page: '1', limit: '10', search: 'Smith' });
+      expect(parentService.getParents).toHaveBeenCalledWith({ page: '1', limit: '10', search: 'Smith', studentId: undefined }, { schoolId: 1 });
       expect(success).toHaveBeenCalledWith(res, payload, 'Parents retrieved successfully', 200);
     });
   });
@@ -61,7 +61,7 @@ describe('ParentController', () => {
 
       await parentController.getParentById(req, res, next);
 
-      expect(parentService.getParentById).toHaveBeenCalledWith('5');
+      expect(parentService.getParentById).toHaveBeenCalledWith('5', { schoolId: 1 });
     });
   });
 
@@ -103,7 +103,7 @@ describe('ParentController', () => {
 
       await parentController.updateParent(req, res, next);
 
-      expect(parentService.updateParent).toHaveBeenCalledWith('1', req.body);
+      expect(parentService.updateParent).toHaveBeenCalledWith('1', req.body, { schoolId: 1 });
     });
   });
 
@@ -114,7 +114,7 @@ describe('ParentController', () => {
 
       await parentController.deleteParent(req, res, next);
 
-      expect(parentService.deleteParent).toHaveBeenCalledWith('1');
+      expect(parentService.deleteParent).toHaveBeenCalledWith('1', { schoolId: 1 });
     });
   });
 

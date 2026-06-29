@@ -27,7 +27,8 @@ class EmployeeRoleController {
    * Returns all roles assigned to a specific employee.
    */
   getEmployeeRoles = asyncHandler(async (req, res) => {
-    const result = await employeeRoleService.getEmployeeRoles(req.params.eid);
+    const schoolId = req.user?.schoolId || null;
+    const result = await employeeRoleService.getEmployeeRoles(req.params.eid, schoolId);
     return success(res, result, 'Employee roles retrieved successfully');
   });
 
@@ -59,7 +60,8 @@ class EmployeeRoleController {
    * Removes a role from an employee.
    */
   removeRole = asyncHandler(async (req, res) => {
-    const result = await employeeRoleService.removeRole(req.params.eid, req.params.roleName);
+    const schoolId = req.user?.schoolId || null;
+    const result = await employeeRoleService.removeRole(req.params.eid, req.params.roleName, schoolId);
     return success(res, result, 'Role removed successfully');
   });
 }

@@ -16,6 +16,128 @@ const buildFullName = (person = {}) => [person.first_name, person.middle_name, p
   .trim();
 
 class ParentRepository {
+  async getParentIdsBySchool(schoolId, options = {}) {
+    const numericSchoolId = Number(schoolId);
+    if (!Number.isInteger(numericSchoolId) || numericSchoolId <= 0) {
+      return [];
+    }
+
+    const relation = await this.resolveStudentParentsRelation();
+    const replacements = { schoolId: numericSchoolId };
+
+    const userRows = await sequelize.query(
+      `SELECT DISTINCT p.id AS parent_id
+       FROM parents p
+       INNER JOIN persons pe ON pe.id = p.person_id
+       INNER JOIN users u ON u.id = pe.user_id
+       WHERE p.deleted_at IS NULL
+         AND pe.deleted_at IS NULL
+         AND u.school_id = :schoolId`,
+      {
+        replacements,
+        type: QueryTypes.SELECT,
+        transaction: options.transaction
+      }
+    );
+
+    const parentIds = new Set(
+      userRows
+        .map((row) => Number(row.parent_id))
+        .filter((id) => Number.isInteger(id) && id > 0)
+    );
+
+    if (relation) {
+      const linkedRows = await sequelize.query(
+        `SELECT DISTINCT sp.${wrapIdentifier(relation.parentCol)} AS parent_id
+         FROM ${wrapIdentifier(relation.tableName)} sp
+         INNER JOIN students s ON s.id = sp.${wrapIdentifier(relation.studentCol)}
+         INNER JOIN parents p ON p.id = sp.${wrapIdentifier(relation.parentCol)}
+         WHERE s.school_id = :schoolId
+           AND p.deleted_at IS NULL`,
+        {
+          replacements,
+          type: QueryTypes.SELECT,
+          transaction: options.transaction
+        }
+      );
+
+      linkedRows.forEach((row) => {
+        const id = Number(row.parent_id);
+        if (Number.isInteger(id) && id > 0) {
+          parentIds.add(id);
+        }
+      });
+    }
+
+    return Array.from(parentIds);
+  }
+
+  async getParentSchoolIds(parentId, options = {}) {
+    const relation = await this.resolveStudentParentsRelation();
+    const replacements = { parentId: Number(parentId) };
+    const schoolIds = new Set();
+
+    const userSchoolRows = await sequelize.query(
+      `SELECT u.school_id AS school_id
+       FROM parents p
+       JOIN persons pe ON pe.id = p.person_id
+       LEFT JOIN users u ON u.id = pe.user_id
+       WHERE p.id = :parentId AND p.deleted_at IS NULL AND u.school_id IS NOT NULL`,
+      {
+        replacements,
+        type: QueryTypes.SELECT,
+        transaction: options.transaction
+      }
+    );
+
+    userSchoolRows.forEach((row) => {
+      const sid = Number(row.school_id);
+      if (Number.isInteger(sid) && sid > 0) {
+        schoolIds.add(sid);
+      }
+    });
+
+    if (relation) {
+      const linkedSchoolRows = await sequelize.query(
+        `SELECT DISTINCT s.school_id AS school_id
+         FROM ${wrapIdentifier(relation.tableName)} sp
+         JOIN students s ON s.id = sp.${wrapIdentifier(relation.studentCol)}
+         WHERE sp.${wrapIdentifier(relation.parentCol)} = :parentId AND s.school_id IS NOT NULL`,
+        {
+          replacements,
+          type: QueryTypes.SELECT,
+          transaction: options.transaction
+        }
+      );
+
+      linkedSchoolRows.forEach((row) => {
+        const sid = Number(row.school_id);
+        if (Number.isInteger(sid) && sid > 0) {
+          schoolIds.add(sid);
+        }
+      });
+    }
+
+    return Array.from(schoolIds);
+  }
+
+  async assertParentSchoolScope(parentId, schoolId, options = {}) {
+    if (!schoolId) {
+      return;
+    }
+
+    const numericSchoolId = Number(schoolId);
+    const parentSchoolIds = await this.getParentSchoolIds(parentId, options);
+
+    if (!parentSchoolIds.length && options.allowUnscoped) {
+      return;
+    }
+
+    if (!parentSchoolIds.includes(numericSchoolId)) {
+      throw new AppError('Parent not found', 404);
+    }
+  }
+
   async resolveStudentParentsRelation() {
     const tableName = await resolveTableName(['student_parents']);
     if (!tableName) {
@@ -523,11 +645,26 @@ class ParentRepository {
   }
 
   async findAll(filters = {}) {
-    const { page = 1, limit = 10, search, studentId } = filters;
+    const { page = 1, limit = 10, search, studentId, schoolId = null } = filters;
     const parsedPage = Math.max(1, parseInt(page, 10) || 1);
     const parsedLimit = Math.max(1, parseInt(limit, 10) || 10);
     const offset = (parsedPage - 1) * parsedLimit;
     const whereClause = {};
+
+    if (schoolId) {
+      const scopedParentIds = await this.getParentIdsBySchool(schoolId);
+      if (!scopedParentIds.length) {
+        return {
+          parents: [],
+          total: 0,
+          page: parsedPage,
+          limit: parsedLimit,
+          totalPages: 0
+        };
+      }
+
+      whereClause.id = { [Op.in]: scopedParentIds };
+    }
 
     const normalizedStudentId = Number.parseInt(String(studentId || ''), 10);
     if (!Number.isNaN(normalizedStudentId) && normalizedStudentId > 0) {
@@ -561,7 +698,19 @@ class ParentRepository {
         };
       }
 
-      whereClause.id = { [Op.in]: linkedParentIds };
+      whereClause.id = whereClause.id
+        ? { [Op.in]: linkedParentIds.filter((id) => whereClause.id[Op.in].includes(id)) }
+        : { [Op.in]: linkedParentIds };
+
+      if (!whereClause.id[Op.in].length) {
+        return {
+          parents: [],
+          total: 0,
+          page: parsedPage,
+          limit: parsedLimit,
+          totalPages: 0
+        };
+      }
     }
 
     if (search) {
@@ -627,7 +776,9 @@ class ParentRepository {
     };
   }
 
-  async findById(id) {
+  async findById(id, schoolId = null) {
+    await this.assertParentSchoolScope(id, schoolId);
+
     const parent = await Parent.findByPk(id, {
       include: [{
         model: Person,
@@ -751,7 +902,9 @@ class ParentRepository {
       }
 
       await transaction.commit();
-      return await this.findById(parentId);
+      await this.assertParentSchoolScope(parentId, options.schoolId, { transaction, allowUnscoped: true });
+
+      return await this.findById(parentId, options.schoolId || null);
     } catch (error) {
       await transaction.rollback();
       throw error;
@@ -802,11 +955,13 @@ class ParentRepository {
     }
   }
 
-  async update(id, parentData, personData) {
+  async update(id, parentData, personData, schoolId = null) {
     const { sequelize } = require('../../../config/database');
     const transaction = await sequelize.transaction();
 
     try {
+      await this.assertParentSchoolScope(id, schoolId, { transaction });
+
       const parent = await Parent.findByPk(id, {
         include: [{ model: Person, as: 'person' }],
         transaction
@@ -820,14 +975,16 @@ class ParentRepository {
       }
 
       await transaction.commit();
-      return await this.findById(id);
+      return await this.findById(id, schoolId);
     } catch (error) {
       await transaction.rollback();
       throw error;
     }
   }
 
-  async delete(id) {
+  async delete(id, schoolId = null) {
+    await this.assertParentSchoolScope(id, schoolId);
+
     const parent = await Parent.findByPk(id);
     if (!parent) throw new AppError('Parent not found', 404);
     await parent.destroy();

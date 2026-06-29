@@ -269,8 +269,14 @@ class MarkRepository {
         }));
     }
 
-    async findGradeById(id) {
-        const grade = await GradingScale.findByPk(id);
+    async findGradeByIdScoped(id, academicYearId) {
+        const grade = await GradingScale.findOne({
+            where: {
+                id,
+                academic_year_id: academicYearId
+            }
+        });
+
         if (!grade) {
             throw new AppError('Grade not found', 404);
         }
@@ -297,8 +303,8 @@ class MarkRepository {
         };
     }
 
-    async updateGrade(id, updates = {}) {
-        const grade = await this.findGradeById(id);
+    async updateGradeScoped(id, academicYearId, updates = {}) {
+        const grade = await this.findGradeByIdScoped(id, academicYearId);
 
         const payload = {};
         if (typeof updates.gradeName !== 'undefined') payload.grade_name = updates.gradeName;
@@ -319,8 +325,8 @@ class MarkRepository {
         };
     }
 
-    async deleteGrade(id) {
-        const grade = await this.findGradeById(id);
+    async deleteGradeScoped(id, academicYearId) {
+        const grade = await this.findGradeByIdScoped(id, academicYearId);
         await grade.destroy();
         return { id: grade.id };
     }

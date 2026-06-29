@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/book.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const {
   getBooksValidator, bookIdValidator, legacyBookIdValidator,
   createBookValidator, updateBookValidator,
@@ -15,6 +15,7 @@ const { validate } = require('../../../middleware/validation.middleware');
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('books:read'),
   getBooksValidator,
   validate,
@@ -24,6 +25,7 @@ router.get(
 router.get(
   '/barcode/:barcode',
   authenticate,
+  enforceTenant(),
   requirePermission('books:read'),
   barcodeValidator,
   validate,
@@ -33,6 +35,7 @@ router.get(
 router.get(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('books:read'),
   bookIdValidator,
   validate,
@@ -42,6 +45,7 @@ router.get(
 router.post(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('books:create'),
   createBookValidator,
   validate,
@@ -51,6 +55,7 @@ router.post(
 router.put(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('books:update'),
   updateBookValidator,
   validate,
@@ -60,6 +65,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('books:delete'),
   bookIdValidator,
   validate,
@@ -70,6 +76,7 @@ router.delete(
 router.delete(
   '/legacy/:bid',
   authenticate,
+  enforceTenant(),
   requirePermission('books:delete'),
   legacyBookIdValidator,
   validate,
@@ -80,6 +87,7 @@ router.delete(
 router.get(
   '/:id/copies',
   authenticate,
+  enforceTenant(),
   requirePermission('books:read'),
   bookIdValidator,
   validate,
@@ -89,6 +97,7 @@ router.get(
 router.post(
   '/:id/copies',
   authenticate,
+  enforceTenant(),
   requirePermission('books:create'),
   createBookCopyValidator,
   validate,
@@ -98,6 +107,7 @@ router.post(
 router.put(
   '/copies/:copyId',
   authenticate,
+  enforceTenant(),
   requirePermission('books:update'),
   updateBookCopyValidator,
   validate,
@@ -107,6 +117,7 @@ router.put(
 router.delete(
   '/copies/:copyId',
   authenticate,
+  enforceTenant(),
   requirePermission('books:delete'),
   copyIdValidator,
   validate,

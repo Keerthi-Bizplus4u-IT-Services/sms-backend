@@ -70,8 +70,11 @@ class ParentService {
     };
   }
 
-  async getParents(filters) {
-    const result = await parentRepository.findAll(filters);
+  async getParents(filters, context = {}) {
+    const result = await parentRepository.findAll({
+      ...filters,
+      schoolId: context.schoolId || null
+    });
     const { parents, ...rest } = result;
 
     return {
@@ -80,8 +83,8 @@ class ParentService {
     };
   }
 
-  async getParentById(id) {
-    const parent = await parentRepository.findById(id);
+  async getParentById(id, context = {}) {
+    const parent = await parentRepository.findById(id, context.schoolId || null);
     return this.serializeParent(parent);
   }
 
@@ -121,14 +124,14 @@ class ParentService {
     return this.serializeParent(linkedParent);
   }
 
-  async updateParent(id, data) {
+  async updateParent(id, data, context = {}) {
     const { parent, person } = data;
-    const updatedParent = await parentRepository.update(id, parent, person);
+    const updatedParent = await parentRepository.update(id, parent, person, context.schoolId || null);
     return this.serializeParent(updatedParent);
   }
 
-  async deleteParent(id) {
-    return await parentRepository.delete(id);
+  async deleteParent(id, context = {}) {
+    return await parentRepository.delete(id, context.schoolId || null);
   }
 
   async syncStudentLinks(options = {}) {

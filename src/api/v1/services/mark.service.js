@@ -104,12 +104,8 @@ class MarkService {
     }
 
     async getGradeById(id, context = {}) {
-        const grade = await markRepository.findGradeById(id);
         const academicYearId = await this.resolveAcademicYearId(context.schoolId);
-
-        if (Number(grade.academic_year_id) !== Number(academicYearId)) {
-            throw new AppError('Grade not found', 404);
-        }
+        const grade = await markRepository.findGradeByIdScoped(id, academicYearId);
 
         return {
             id: grade.id,
@@ -134,14 +130,9 @@ class MarkService {
     }
 
     async updateGrade(id, payload = {}, context = {}) {
-        const existing = await markRepository.findGradeById(id);
         const academicYearId = await this.resolveAcademicYearId(context.schoolId);
 
-        if (Number(existing.academic_year_id) !== Number(academicYearId)) {
-            throw new AppError('Grade not found', 404);
-        }
-
-        return markRepository.updateGrade(id, {
+        return markRepository.updateGradeScoped(id, academicYearId, {
             gradeName: payload.gname ?? payload.gradeName,
             gradePoint: payload.gpoint ?? payload.gradePoint,
             percentFrom: payload.pform ?? payload.percentFrom,
@@ -151,14 +142,9 @@ class MarkService {
     }
 
     async deleteGrade(id, context = {}) {
-        const existing = await markRepository.findGradeById(id);
         const academicYearId = await this.resolveAcademicYearId(context.schoolId);
 
-        if (Number(existing.academic_year_id) !== Number(academicYearId)) {
-            throw new AppError('Grade not found', 404);
-        }
-
-        return markRepository.deleteGrade(id);
+        return markRepository.deleteGradeScoped(id, academicYearId);
     }
 }
 

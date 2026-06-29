@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">3.38% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/207</span>
+                <span class='fraction'>0/209</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/198</span>
+                <span class='fraction'>0/200</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">3.48% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/201</span>
+                <span class='fraction'>0/203</span>
             </div>
         
             
@@ -971,14 +971,19 @@
 <a name='L906'></a><a href='#L906'>906</a>
 <a name='L907'></a><a href='#L907'>907</a>
 <a name='L908'></a><a href='#L908'>908</a>
-<a name='L909'></a><a href='#L909'>909</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L909'></a><a href='#L909'>909</a>
+<a name='L910'></a><a href='#L910'>910</a>
+<a name='L911'></a><a href='#L911'>911</a>
+<a name='L912'></a><a href='#L912'>912</a>
+<a name='L913'></a><a href='#L913'>913</a>
+<a name='L914'></a><a href='#L914'>914</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1862,6 +1867,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1878,15 +1887,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { Student, Person, User, Class, Section, AcademicYear, SchoolBranch } = require('../../../models');
-const { AppError } = require('../../../middleware/error.middleware');
-const { Op, QueryTypes } = require('sequelize');
-const { resolveTableName, getTableColumns } = require('./helpers/schema.utils');
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { Student, Person, User, Class, Section, AcademicYear, SchoolBranch } = <span class="cstat-no" title="statement not covered" >require('../../../models');</span>
+const { AppError } = <span class="cstat-no" title="statement not covered" >require('../../../middleware/error.middleware');</span>
+const { Op, QueryTypes } = <span class="cstat-no" title="statement not covered" >require('sequelize');</span>
+const { resolveTableName, getTableColumns } = <span class="cstat-no" title="statement not covered" >require('./helpers/schema.utils');</span>
 &nbsp;
-const wrapIdentifier = <span class="fstat-no" title="function not covered" >(v</span>alue) =&gt; <span class="cstat-no" title="statement not covered" >`"${String(value).replace(/"/g, '')}"`;</span>
+const wrapIdentifier = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(v</span>alue) =&gt; <span class="cstat-no" title="statement not covered" >`"${String(value).replace(/"/g, '')}"`;</span></span>
 &nbsp;
-const getSequelizeInstance = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+const getSequelizeInstance = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >  if (Student.sequelize &amp;&amp; typeof Student.sequelize.transaction === 'function') {</span>
 <span class="cstat-no" title="statement not covered" >    return Student.sequelize;</span>
   }
@@ -2764,9 +2774,13 @@ class StudentRepository {
   /**
    * Bulk update class and section assignments
    */
-<span class="fstat-no" title="function not covered" >  as</span>ync bulkUpdateClassAndSection(studentIds, classId, sectionId, transaction) {
+<span class="fstat-no" title="function not covered" >  as</span>ync bulkUpdateClassAndSection(studentIds, classId, sectionId, schoolId, transaction) {
 <span class="cstat-no" title="statement not covered" >    if (!studentIds || studentIds.length === 0) {</span>
 <span class="cstat-no" title="statement not covered" >      return 0;</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (!schoolId) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new AppError('School scope is required for bulk student updates', 400);</span>
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return Student.update(</span>
@@ -2776,6 +2790,7 @@ class StudentRepository {
       },
       {
         where: {
+          school_id: schoolId,
           id: {
             [Op.in]: studentIds
           }
@@ -2786,7 +2801,7 @@ class StudentRepository {
   }
 }
 &nbsp;
-module.exports = new StudentRepository();
+<span class="cstat-no" title="statement not covered" >module.exports = new StudentRepository();</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -2794,7 +2809,7 @@ module.exports = new StudentRepository();
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-29T17:26:59.978Z
+                at 2026-06-29T18:05:57.976Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

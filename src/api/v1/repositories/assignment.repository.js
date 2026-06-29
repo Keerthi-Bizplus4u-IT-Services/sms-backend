@@ -194,23 +194,38 @@ class AssignmentRepository {
     });
   }
 
-  async updateAssignment(id, updates) {
-    await Assignment.update(updates, {
-      where: { id }
+  async updateAssignment(id, updates, schoolId) {
+    const assignment = await Assignment.findOne({
+      where: {
+        id,
+        is_active: true
+      },
+      include: assignmentInclude({ schoolId })
     });
 
-    return Assignment.findByPk(id);
+    if (!assignment) {
+      return null;
+    }
+
+    await assignment.update(updates);
+    return this.findAssignmentById(id, schoolId);
   }
 
-  async softDeleteAssignment(id) {
-    const [updatedCount] = await Assignment.update(
-      { is_active: false },
-      {
-        where: { id, is_active: true }
-      }
-    );
+  async softDeleteAssignment(id, schoolId) {
+    const assignment = await Assignment.findOne({
+      where: {
+        id,
+        is_active: true
+      },
+      include: assignmentInclude({ schoolId })
+    });
 
-    return updatedCount > 0;
+    if (!assignment) {
+      return false;
+    }
+
+    await assignment.update({ is_active: false });
+    return true;
   }
 
   async listTeacherAssignments({ teacherId, schoolId, page, limit, classId, sectionId }) {

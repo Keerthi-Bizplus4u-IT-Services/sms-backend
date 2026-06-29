@@ -308,7 +308,7 @@ class AssignmentService {
         payload.late_submission_penalty_percent ?? assignment.late_submission_penalty_percent,
       attachment_url: payload.attachment_url ?? assignment.attachment_url,
       instructions: payload.instructions ?? assignment.instructions
-    });
+    }, schoolId);
 
     return this.getAssignmentById({
       id: payload.id,
@@ -330,7 +330,7 @@ class AssignmentService {
       userId
     });
 
-    await assignmentRepository.softDeleteAssignment(id);
+    await assignmentRepository.softDeleteAssignment(id, numericSchoolId);
 
     return { id: Number(id), deleted: true };
   }

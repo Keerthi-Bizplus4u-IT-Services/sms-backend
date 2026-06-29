@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/97</span>
+                <span class='fraction'>0/98</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/105</span>
+                <span class='fraction'>0/108</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/97</span>
+                <span class='fraction'>0/98</span>
             </div>
         
             
@@ -411,7 +411,30 @@
 <a name='L346'></a><a href='#L346'>346</a>
 <a name='L347'></a><a href='#L347'>347</a>
 <a name='L348'></a><a href='#L348'>348</a>
-<a name='L349'></a><a href='#L349'>349</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L349'></a><a href='#L349'>349</a>
+<a name='L350'></a><a href='#L350'>350</a>
+<a name='L351'></a><a href='#L351'>351</a>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a>
+<a name='L354'></a><a href='#L354'>354</a>
+<a name='L355'></a><a href='#L355'>355</a>
+<a name='L356'></a><a href='#L356'>356</a>
+<a name='L357'></a><a href='#L357'>357</a>
+<a name='L358'></a><a href='#L358'>358</a>
+<a name='L359'></a><a href='#L359'>359</a>
+<a name='L360'></a><a href='#L360'>360</a>
+<a name='L361'></a><a href='#L361'>361</a>
+<a name='L362'></a><a href='#L362'>362</a>
+<a name='L363'></a><a href='#L363'>363</a>
+<a name='L364'></a><a href='#L364'>364</a>
+<a name='L365'></a><a href='#L365'>365</a>
+<a name='L366'></a><a href='#L366'>366</a>
+<a name='L367'></a><a href='#L367'>367</a>
+<a name='L368'></a><a href='#L368'>368</a>
+<a name='L369'></a><a href='#L369'>369</a>
+<a name='L370'></a><a href='#L370'>370</a>
+<a name='L371'></a><a href='#L371'>371</a>
+<a name='L372'></a><a href='#L372'>372</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -691,6 +714,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -721,6 +761,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1031,47 +1077,70 @@ class ExamScheduleRepository {
     });
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync create(payload) {
+<span class="fstat-no" title="function not covered" >  as</span>ync create(payload, schoolId) {
     const record = <span class="cstat-no" title="statement not covered" >await ExamSchedule.create(payload);</span>
-<span class="cstat-no" title="statement not covered" >    return this.findById(record.id);</span>
+<span class="cstat-no" title="statement not covered" >    return this.findById(record.id, schoolId);</span>
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync update(id, payload) {
-    const record = <span class="cstat-no" title="statement not covered" >await ExamSchedule.findByPk(id);</span>
+<span class="fstat-no" title="function not covered" >  as</span>ync update(id, payload, schoolId) {
+    const record = <span class="cstat-no" title="statement not covered" >await ExamSchedule.findOne({</span>
+      where: { id },
+      include: [
+        {
+          model: Exam,
+          as: 'exam',
+          required: true,
+          include: [
+            {
+              model: AcademicYear,
+              as: 'academicYear',
+              required: true,
+              where: { school_id: schoolId }
+            }
+          ]
+        }
+      ]
+    });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (!record) {</span>
 <span class="cstat-no" title="statement not covered" >      return null;</span>
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    await record.update(payload);</span>
-<span class="cstat-no" title="statement not covered" >    return this.findById(id);</span>
+<span class="cstat-no" title="statement not covered" >    return this.findById(id, schoolId);</span>
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync findById(id) {
-    const schedule = <span class="cstat-no" title="statement not covered" >await ExamSchedule.findByPk(id, {</span>
+<span class="fstat-no" title="function not covered" >  as</span>ync findById(id, schoolId = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
+    const include = <span class="cstat-no" title="statement not covered" >[</span>
+      {
+        model: Exam,
+        as: 'exam',
+        attributes: ['id', 'name', 'exam_type', 'academic_year_id'],
+        include: [
+          {
+            model: AcademicYear,
+            as: 'academicYear',
+            attributes: ['id', 'name', 'is_current'],
+            ...(schoolId ? { where: { school_id: schoolId }, required: true } : {})
+          }
+        ]
+      },
+      {
+        model: Class,
+        as: 'class',
+        attributes: ['id', 'name', 'numeric_grade']
+      },
+      {
+        model: Subject,
+        as: 'subject',
+        attributes: ['id', 'name', 'code']
+      }
+    ];
+&nbsp;
+    const schedule = <span class="cstat-no" title="statement not covered" >await ExamSchedule.findOne({</span>
+      where: { id },
       include: [
-        {
-          model: Exam,
-          as: 'exam',
-          attributes: ['id', 'name', 'exam_type', 'academic_year_id'],
-          include: [
-            {
-              model: AcademicYear,
-              as: 'academicYear',
-              attributes: ['id', 'name', 'is_current']
-            }
-          ]
-        },
-        {
-          model: Class,
-          as: 'class',
-          attributes: ['id', 'name', 'numeric_grade']
-        },
-        {
-          model: Subject,
-          as: 'subject',
-          attributes: ['id', 'name', 'code']
-        }
+        ...include
       ]
     });
 &nbsp;
@@ -1114,7 +1183,7 @@ class ExamScheduleRepository {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-29T17:27:00.466Z
+                at 2026-06-29T18:05:58.313Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -54,10 +54,15 @@ class FeeService {
     }, scope);
   }
 
-  async recordPayment(payload = {}) {
+  async recordPayment(payload = {}, scope = {}) {
     const roll = String(payload.roll || '').trim();
     const feeType = Number(payload.feeType);
     const amount = Number(payload.amount);
+    const schoolId = Number(scope.schoolId || 0);
+
+    if (!Number.isInteger(schoolId) || schoolId <= 0) {
+      throw new AppError('School context is required', 400);
+    }
 
     if (!roll) {
       throw new AppError('Student roll number is required', 400);
@@ -76,7 +81,7 @@ class FeeService {
         roll,
         feeType,
         amount
-      });
+      }, scope);
 
       if (!record) {
         throw new AppError('Unable to record fee payment', 500);
@@ -225,8 +230,13 @@ class FeeService {
     return { userData: data };
   }
 
-  async updateFeeStructure(data) {
+  async updateFeeStructure(data, scope = {}) {
     const { sclass, tfee, fterm, sterm, thterm, trans, spofee } = data;
+    const schoolId = Number(scope.schoolId || 0);
+
+    if (!Number.isInteger(schoolId) || schoolId <= 0) {
+      throw new AppError('School context is required', 400);
+    }
     
     if (sclass === undefined || sclass === '-1') {
       throw new AppError('Valid class identifier is required', 400);
@@ -243,14 +253,20 @@ class FeeService {
       spofee: Number(spofee) || 0
     };
 
-    return await feeRepository.updateFeeDetails(normalizedData);
+    return await feeRepository.updateFeeDetails(normalizedData, scope);
   }
 
-  async deleteFeeStructure(classId) {
+  async deleteFeeStructure(classId, scope = {}) {
+    const schoolId = Number(scope.schoolId || 0);
+
+    if (!Number.isInteger(schoolId) || schoolId <= 0) {
+      throw new AppError('School context is required', 400);
+    }
+
     if (!classId) {
       throw new AppError('Class identifier is required', 400);
     }
-    return await feeRepository.deleteFeeDetails(classId);
+    return await feeRepository.deleteFeeDetails(classId, scope);
   }
 }
 

@@ -15,7 +15,7 @@ describe('RoleController', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    req = mockRequest();
+    req = mockRequest({ user: { roleName: 'super_admin' } });
     res = mockResponse();
     next = mockNext();
     success.mockReturnValue(res);
@@ -29,7 +29,7 @@ describe('RoleController', () => {
 
       await roleController.listRoles(req, res, next);
 
-      expect(roleService.listRoles).toHaveBeenCalled();
+      expect(roleService.listRoles).toHaveBeenCalledWith(req);
       expect(success).toHaveBeenCalledWith(res, roles, 'Roles retrieved successfully');
     });
 
@@ -50,7 +50,7 @@ describe('RoleController', () => {
 
       await roleController.getRole(req, res, next);
 
-      expect(roleService.getRoleById).toHaveBeenCalledWith('1');
+      expect(roleService.getRoleById).toHaveBeenCalledWith('1', req);
       expect(success).toHaveBeenCalledWith(res, expect.any(Object), 'Role retrieved successfully');
     });
 
@@ -71,7 +71,7 @@ describe('RoleController', () => {
 
       await roleController.createRole(req, res, next);
 
-      expect(roleService.createRole).toHaveBeenCalledWith(req.body);
+      expect(roleService.createRole).toHaveBeenCalledWith(req.body, req);
       expect(created).toHaveBeenCalledWith(res, expect.any(Object), 'Role created successfully');
     });
 
@@ -93,7 +93,7 @@ describe('RoleController', () => {
 
       await roleController.updateRole(req, res, next);
 
-      expect(roleService.updateRole).toHaveBeenCalledWith('3', req.body);
+      expect(roleService.updateRole).toHaveBeenCalledWith('3', req.body, req);
       expect(success).toHaveBeenCalledWith(res, expect.any(Object), 'Role updated successfully');
     });
   });
@@ -105,7 +105,7 @@ describe('RoleController', () => {
 
       await roleController.deleteRole(req, res, next);
 
-      expect(roleService.deleteRole).toHaveBeenCalledWith('3');
+      expect(roleService.deleteRole).toHaveBeenCalledWith('3', req);
       expect(success).toHaveBeenCalledWith(res, null, 'Role deleted successfully');
     });
 

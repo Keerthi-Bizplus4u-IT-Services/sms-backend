@@ -14,7 +14,10 @@ jest.mock('../../../../../src/api/v1/repositories/student.repository', () => ({
   findByClass: jest.fn(),
   findBySection: jest.fn(),
   findActiveByClassForPromotion: jest.fn(),
-  bulkUpdateClassAndSection: jest.fn()
+  bulkUpdateClassAndSection: jest.fn(),
+  getSectionPlacementContext: jest.fn(),
+  findLatestAdmissionNumber: jest.fn(),
+  getSectionRollNumbers: jest.fn()
 }));
 
 jest.mock('../../../../../src/models', () => ({
@@ -51,6 +54,18 @@ describe('StudentService', () => {
     jest.clearAllMocks();
     sequelize.transaction.mockImplementation(async (callback) => callback({}));
     sequelize.query.mockResolvedValue();
+    studentRepository.findById.mockResolvedValue(mockStudent);
+    studentRepository.getSectionPlacementContext.mockResolvedValue([
+      {
+        id: 1,
+        name: 'A',
+        max_students: 40,
+        current_strength: 20,
+        has_capacity: true
+      }
+    ]);
+    studentRepository.findLatestAdmissionNumber.mockResolvedValue('ADM001');
+    studentRepository.getSectionRollNumbers.mockResolvedValue([1, 2, 3]);
 
     // Mock person data
     mockPerson = {
@@ -324,7 +339,11 @@ describe('StudentService', () => {
       );
       expect(studentRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          ...validData.student,
+          class_id: validData.student.class_id,
+          admission_date: validData.student.admission_date,
+          admission_number: 'ADM002',
+          section_id: expect.any(Number),
+          roll_number: expect.any(String),
           school_id: expect.any(Number),
           branch_id: expect.any(Number)
         }),
@@ -416,18 +435,26 @@ describe('StudentService', () => {
         .toThrow(new AppError('Student details are incomplete', 400));
     });
 
-    it('should throw error when section_id is missing', async () => {
+    it('should auto-assign section when section_id is missing', async () => {
       // Arrange
       const invalidData = {
         ...validData,
         student: { ...validData.student, section_id: undefined }
       };
       studentRepository.findByAdmissionNumber.mockResolvedValue(null);
+      studentRepository.create.mockResolvedValue(mockStudent);
 
-      // Act & Assert
-      await expect(studentService.createStudent(invalidData))
-        .rejects
-        .toThrow(new AppError('Student details are incomplete', 400));
+      // Act
+      await studentService.createStudent(invalidData);
+
+      // Assert
+      expect(studentRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          section_id: expect.any(Number)
+        }),
+        expect.any(Object),
+        null
+      );
     });
 
     it('should throw error when admission_date is missing', async () => {
@@ -463,7 +490,11 @@ describe('StudentService', () => {
       // Assert
       expect(studentRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          ...dataWithUser.student,
+          class_id: dataWithUser.student.class_id,
+          admission_date: dataWithUser.student.admission_date,
+          admission_number: 'ADM002',
+          section_id: expect.any(Number),
+          roll_number: expect.any(String),
           school_id: expect.any(Number),
           branch_id: expect.any(Number)
         }),
@@ -479,7 +510,6 @@ describe('StudentService', () => {
   describe('updateStudent', () => {
     const updateData = {
       student: {
-        roll_number: 25,
         blood_group: 'A+'
       },
       person: {
@@ -503,41 +533,37 @@ describe('StudentService', () => {
         updateData.person,
         expect.objectContaining({ schoolId: expect.any(Number) })
       );
-      expect(result.rollNumber).toBe(25);
+      expect(result).toBeDefined();
     });
 
-    it('should check admission number uniqueness when updating', async () => {
+    it('should reject changing admission number', async () => {
       // Arrange
       const dataWithAdmission = {
         student: { admission_number: 'ADM003' },
         person: {}
       };
-      studentRepository.findByAdmissionNumber.mockResolvedValue(null);
-      studentRepository.update.mockResolvedValue(mockStudent);
-
-      // Act
-      await studentService.updateStudent(1, dataWithAdmission);
-
-      // Assert
-      expect(studentRepository.findByAdmissionNumber).toHaveBeenCalledWith(
-        'ADM003',
-        expect.objectContaining({ schoolId: expect.any(Number) })
-      );
-    });
-
-    it('should throw error when new admission number already exists', async () => {
-      // Arrange
-      const dataWithAdmission = {
-        student: { admission_number: 'ADM002' },
-        person: {}
-      };
-      const existingStudent = { ...mockStudent, id: 2, admission_number: 'ADM002' };
-      studentRepository.findByAdmissionNumber.mockResolvedValue(existingStudent);
 
       // Act & Assert
       await expect(studentService.updateStudent(1, dataWithAdmission))
         .rejects
-        .toThrow(new AppError('Admission number already exists', 409));
+        .toThrow(new AppError('Admission number cannot be changed once created', 400));
+
+      expect(studentRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should reject changing roll number', async () => {
+      // Arrange
+      const dataWithRoll = {
+        student: { roll_number: '30' },
+        person: {}
+      };
+
+      // Act & Assert
+      await expect(studentService.updateStudent(1, dataWithRoll))
+        .rejects
+        .toThrow(new AppError('Roll number cannot be changed once created', 400));
+
+      expect(studentRepository.update).not.toHaveBeenCalled();
     });
 
     it('should allow updating same student with same admission number', async () => {
@@ -570,7 +596,7 @@ describe('StudentService', () => {
       // Assert
       expect(studentRepository.update).toHaveBeenCalledWith(
         1,
-        undefined,
+        {},
         personOnlyData.person,
         expect.objectContaining({ schoolId: expect.any(Number) })
       );
@@ -579,7 +605,7 @@ describe('StudentService', () => {
     it('should update only student data', async () => {
       // Arrange
       const studentOnlyData = {
-        student: { roll_number: 30 }
+        student: { blood_group: 'AB+' }
       };
       studentRepository.update.mockResolvedValue(mockStudent);
 
@@ -857,6 +883,7 @@ describe('StudentService', () => {
         [studentsForPromotion[0].id],
         basePayload.toClassId,
         sections[0].id,
+        expect.any(Number),
         expect.any(Object)
       );
       expect(sequelize.query).toHaveBeenCalled();

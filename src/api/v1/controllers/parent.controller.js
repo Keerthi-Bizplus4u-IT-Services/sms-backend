@@ -18,18 +18,20 @@ const pickUploadedFile = (req, fieldName) => {
 
 class ParentController {
   getParents = asyncHandler(async (req, res) => {
+    const schoolId = ensureSchoolContext(req);
     const filters = {
       page: req.query.page,
       limit: req.query.limit,
       search: req.query.search,
       studentId: req.query.studentId
     };
-    const result = await parentService.getParents(filters);
+    const result = await parentService.getParents(filters, { schoolId });
     return success(res, result, 'Parents retrieved successfully', 200);
   });
 
   getParentById = asyncHandler(async (req, res) => {
-    const parent = await parentService.getParentById(req.params.id);
+    const schoolId = ensureSchoolContext(req);
+    const parent = await parentService.getParentById(req.params.id, { schoolId });
     return success(res, parent, 'Parent retrieved successfully', 200);
   });
 
@@ -126,12 +128,13 @@ class ParentController {
 
     req.body.person = personPayload;
 
-    const parent = await parentService.updateParent(req.params.id, req.body);
+    const parent = await parentService.updateParent(req.params.id, req.body, { schoolId });
     return success(res, parent, 'Parent updated successfully', 200);
   });
 
   deleteParent = asyncHandler(async (req, res) => {
-    const result = await parentService.deleteParent(req.params.id);
+    const schoolId = ensureSchoolContext(req);
+    const result = await parentService.deleteParent(req.params.id, { schoolId });
     return success(res, result, 'Parent deleted successfully', 200);
   });
 

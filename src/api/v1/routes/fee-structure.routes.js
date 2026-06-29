@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const feeController = require('../controllers/fee.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { getFeeStructureValidator, updateFeeStructureValidator, feeStructureIdValidator } = require('../validators/fee-structure.validator');
 const { validate } = require('../../../middleware/validation.middleware');
 
@@ -14,6 +14,7 @@ const { validate } = require('../../../middleware/validation.middleware');
 router.get(
   '/fee-structures',
   authenticate,
+  enforceTenant(),
   requirePermission('fee-structures:read'),
   getFeeStructureValidator,
   validate,
@@ -23,6 +24,7 @@ router.get(
 router.put(
   '/fee-structures/:cn',
   authenticate,
+  enforceTenant(),
   requirePermission('fee-structures:write'),
   (req, res, next) => {
     req.body = {
@@ -39,6 +41,7 @@ router.put(
 router.delete(
   '/fee-structures/:cn',
   authenticate,
+  enforceTenant(),
   requirePermission('fee-structures:delete'),
   feeStructureIdValidator,
   validate,

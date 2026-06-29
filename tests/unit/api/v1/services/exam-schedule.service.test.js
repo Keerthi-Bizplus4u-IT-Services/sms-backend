@@ -60,7 +60,7 @@ describe('ExamScheduleService', () => {
       max_marks: 50,
       passing_marks: 17,
       room_number: null
-    });
+    }, 5);
     expect(result).toEqual({ id: 99, ename: 'Mid Term Exam' });
   });
 
@@ -90,7 +90,7 @@ describe('ExamScheduleService', () => {
       max_marks: 25,
       passing_marks: 8,
       room_number: null
-    });
+    }, 5);
     expect(result).toEqual({ id: 44, ename: 'Unit Test 1' });
   });
 

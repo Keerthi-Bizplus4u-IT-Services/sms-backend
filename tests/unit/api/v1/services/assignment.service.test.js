@@ -68,6 +68,7 @@ describe('AssignmentService', () => {
       subject_id: 6,
       title: 'Math Practice',
       description: 'Solve ten problems',
+      assigned_date: '2026-04-04',
       due_date: '2026-04-05',
       instructions: 'Show your working'
     });
@@ -326,7 +327,8 @@ describe('AssignmentService', () => {
 
     expect(assignmentRepository.updateAssignment).toHaveBeenCalledWith(
       77,
-      expect.objectContaining({ title: 'Updated Math Practice', due_date: '2026-04-06' })
+      expect.objectContaining({ title: 'Updated Math Practice', due_date: '2026-04-06' }),
+      2
     );
     expect(result.title).toBe('Updated Math Practice');
   });
@@ -346,7 +348,7 @@ describe('AssignmentService', () => {
       userId: 17,
     });
 
-    expect(assignmentRepository.softDeleteAssignment).toHaveBeenCalledWith(77);
+    expect(assignmentRepository.softDeleteAssignment).toHaveBeenCalledWith(77, 2);
     expect(result).toEqual({ id: 77, deleted: true });
   });
 });

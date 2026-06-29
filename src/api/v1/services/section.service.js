@@ -125,7 +125,7 @@ class SectionService {
       updates.class_teacher_id = classTeacherId;
     }
 
-    return sectionRepository.update(sectionId, updates);
+    return sectionRepository.updateScoped(sectionId, section.class_id, updates);
   }
 
   async deleteSection(sectionId, context = {}) {
@@ -137,7 +137,7 @@ class SectionService {
     }
 
     await this.validateClassScope(section.class_id, schoolId);
-    await sectionRepository.delete(sectionId);
+    await sectionRepository.deleteScoped(sectionId, section.class_id);
     return true;
   }
 }

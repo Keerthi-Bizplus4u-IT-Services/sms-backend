@@ -651,7 +651,7 @@ class FeeRepository {
     };
   }
 
-  async resolveClassIdNormalized(classToken, tables) {
+  async resolveClassIdNormalized(classToken, tables, scope = {}) {
     const parsed = Number(classToken);
     if (!parsed || parsed <= 0) {
       return null;
@@ -664,6 +664,12 @@ class FeeRepository {
     if (classColumns.has('numeric_grade')) {
       clauses.push(`numeric_grade + 1 = ?`);
       values.push(parsed);
+    }
+
+    const schoolId = Number(scope?.schoolId || 0);
+    if (classColumns.has('school_id') && Number.isInteger(schoolId) && schoolId > 0) {
+      clauses.push(`school_id = ?`);
+      values.push(schoolId);
     }
 
     const rows = await sequelize.query(
@@ -1068,19 +1074,39 @@ class FeeRepository {
     };
   }
 
-  async createPayment({ roll, feeType, amount }) {
+  async createPayment({ roll, feeType, amount }, scope = {}) {
     const mode = await this.getSchemaMode();
     if (mode === 'normalized') {
-      return this.createPaymentNormalized({ roll, feeType, amount });
+      return this.createPaymentNormalized({ roll, feeType, amount }, scope);
     }
-    return this.createPaymentLegacy({ roll, feeType, amount });
+    return this.createPaymentLegacy({ roll, feeType, amount }, scope);
   }
 
-  async createPaymentLegacy({ roll, feeType, amount }) {
+  async createPaymentLegacy({ roll, feeType, amount }, scope = {}) {
     const tables = await this.getTableMap();
     const parsedAmount = Number(amount);
+    const schoolId = Number(scope?.schoolId || 0);
     if (Number.isNaN(parsedAmount) || parsedAmount <= 0) {
       return null;
+    }
+
+    const studentColumns = await getTableColumns(tables.students);
+    if (studentColumns.has('school_id')) {
+      if (!Number.isInteger(schoolId) || schoolId <= 0) {
+        throw new AppError('School context is required', 400);
+      }
+
+      const schoolScopedStudent = await sequelize.query(
+        `SELECT 1 FROM ${tables.students} WHERE roll = ? AND school_id = ? LIMIT 1`,
+        {
+          replacements: [roll, schoolId],
+          type: QueryTypes.SELECT
+        }
+      );
+
+      if (!schoolScopedStudent.length) {
+        throw new AppError('Student not found for the provided roll number in current school', 404);
+      }
     }
 
     const [, metadata] = await sequelize.query(
@@ -1102,18 +1128,23 @@ class FeeRepository {
     return this.findPaymentByIdLegacy(insertedId);
   }
 
-  async createPaymentNormalized({ roll, feeType, amount }) {
+  async createPaymentNormalized({ roll, feeType, amount }, scope = {}) {
     const tables = await this.getTableMap();
     const parsedAmount = Number(amount);
+    const schoolId = Number(scope?.schoolId || 0);
     if (Number.isNaN(parsedAmount) || parsedAmount <= 0) {
       return null;
     }
 
+    if (!Number.isInteger(schoolId) || schoolId <= 0) {
+      throw new AppError('School context is required', 400);
+    }
+
     return sequelize.transaction(async (transaction) => {
       const students = await sequelize.query(
-        `SELECT id FROM ${tables.students} WHERE roll_number = ? LIMIT 1`,
+        `SELECT id FROM ${tables.students} WHERE roll_number = ? AND school_id = ? LIMIT 1`,
         {
-          replacements: [roll],
+          replacements: [roll, schoolId],
           type: QueryTypes.SELECT,
           transaction
         }
@@ -1303,9 +1334,14 @@ class FeeRepository {
     );
   }
 
-  async updateFeeDetails(data) {
+  async updateFeeDetails(data, scope = {}) {
     const mode = await this.getSchemaMode();
     const tables = await this.getTableMap();
+    const schoolId = Number(scope?.schoolId || 0);
+
+    if (!Number.isInteger(schoolId) || schoolId <= 0) {
+      throw new AppError('School context is required', 400);
+    }
 
     if (mode === 'normalized') {
       const currentYearId = await this.getCurrentAcademicYearId();
@@ -1313,7 +1349,7 @@ class FeeRepository {
         throw new AppError('Cannot update normalized fee structure without an active academic year', 400);
       }
 
-      const classId = await this.resolveClassIdNormalized(data.sclass, tables);
+      const classId = await this.resolveClassIdNormalized(data.sclass, tables, scope);
       if (!classId) {
         throw new AppError('Class could not be resolved in normalized schema', 400);
       }
@@ -1439,17 +1475,26 @@ class FeeRepository {
     return { success: true };
   }
 
-  async deleteFeeDetails(classId) {
+  async deleteFeeDetails(classId, scope = {}) {
     const mode = await this.getSchemaMode();
     const tables = await this.getTableMap();
+    const schoolId = Number(scope?.schoolId || 0);
+
+    if (!Number.isInteger(schoolId) || schoolId <= 0) {
+      throw new AppError('School context is required', 400);
+    }
 
     if (mode === 'normalized') {
       const currentYearId = await this.getCurrentAcademicYearId();
+      const classIdScoped = await this.resolveClassIdNormalized(classId, tables, scope);
+      if (!classIdScoped) {
+        throw new AppError('Class could not be resolved in normalized schema', 400);
+      }
       if (currentYearId) {
         await sequelize.query(
           `DELETE FROM ${tables.feeStructures} WHERE class_id = ? AND academic_year_id = ?`,
           {
-            replacements: [classId, currentYearId]
+            replacements: [classIdScoped, currentYearId]
           }
         );
       }

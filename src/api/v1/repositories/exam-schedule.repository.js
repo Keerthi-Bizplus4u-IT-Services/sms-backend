@@ -270,47 +270,70 @@ class ExamScheduleRepository {
     });
   }
 
-  async create(payload) {
+  async create(payload, schoolId) {
     const record = await ExamSchedule.create(payload);
-    return this.findById(record.id);
+    return this.findById(record.id, schoolId);
   }
 
-  async update(id, payload) {
-    const record = await ExamSchedule.findByPk(id);
+  async update(id, payload, schoolId) {
+    const record = await ExamSchedule.findOne({
+      where: { id },
+      include: [
+        {
+          model: Exam,
+          as: 'exam',
+          required: true,
+          include: [
+            {
+              model: AcademicYear,
+              as: 'academicYear',
+              required: true,
+              where: { school_id: schoolId }
+            }
+          ]
+        }
+      ]
+    });
 
     if (!record) {
       return null;
     }
 
     await record.update(payload);
-    return this.findById(id);
+    return this.findById(id, schoolId);
   }
 
-  async findById(id) {
-    const schedule = await ExamSchedule.findByPk(id, {
+  async findById(id, schoolId = null) {
+    const include = [
+      {
+        model: Exam,
+        as: 'exam',
+        attributes: ['id', 'name', 'exam_type', 'academic_year_id'],
+        include: [
+          {
+            model: AcademicYear,
+            as: 'academicYear',
+            attributes: ['id', 'name', 'is_current'],
+            ...(schoolId ? { where: { school_id: schoolId }, required: true } : {})
+          }
+        ]
+      },
+      {
+        model: Class,
+        as: 'class',
+        attributes: ['id', 'name', 'numeric_grade']
+      },
+      {
+        model: Subject,
+        as: 'subject',
+        attributes: ['id', 'name', 'code']
+      }
+    ];
+
+    const schedule = await ExamSchedule.findOne({
+      where: { id },
       include: [
-        {
-          model: Exam,
-          as: 'exam',
-          attributes: ['id', 'name', 'exam_type', 'academic_year_id'],
-          include: [
-            {
-              model: AcademicYear,
-              as: 'academicYear',
-              attributes: ['id', 'name', 'is_current']
-            }
-          ]
-        },
-        {
-          model: Class,
-          as: 'class',
-          attributes: ['id', 'name', 'numeric_grade']
-        },
-        {
-          model: Subject,
-          as: 'subject',
-          attributes: ['id', 'name', 'code']
-        }
+        ...include
       ]
     });
 

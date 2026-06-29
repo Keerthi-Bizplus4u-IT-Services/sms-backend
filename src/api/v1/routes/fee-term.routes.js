@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const feeTermController = require('../controllers/fee-term.controller');
 const { authenticate } = require('../../../middleware/auth.middleware');
-const { requirePermission } = require('../../../middleware/rbac.middleware');
+const { requirePermission, enforceTenant } = require('../../../middleware/rbac.middleware');
 const { validate } = require('../../../middleware/validation.middleware');
 const {
   listFeeTermsValidator,
@@ -14,6 +14,7 @@ const {
 router.get(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('fee-structures:read'),
   listFeeTermsValidator,
   validate,
@@ -23,6 +24,7 @@ router.get(
 router.post(
   '/',
   authenticate,
+  enforceTenant(),
   requirePermission('fee-structures:write'),
   createFeeTermValidator,
   validate,
@@ -32,6 +34,7 @@ router.post(
 router.put(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('fee-structures:write'),
   updateFeeTermValidator,
   validate,
@@ -41,6 +44,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate,
+  enforceTenant(),
   requirePermission('fee-structures:delete'),
   feeTermIdValidator,
   validate,

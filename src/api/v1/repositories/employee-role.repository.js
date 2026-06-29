@@ -14,17 +14,22 @@ const ALLOWED_ROLES = [
 ];
 
 class EmployeeRoleRepository {
-  async getAssignmentsForEmployee(employeeId) {
+  async getAssignmentsForEmployee(employeeId, schoolId) {
     const numericId = parseInt(employeeId, 10);
     if (Number.isNaN(numericId)) throw new AppError('Invalid employee identifier', 400);
+
+    const numericSchoolId = parseInt(schoolId, 10);
+    if (Number.isNaN(numericSchoolId)) throw new AppError('Invalid school identifier', 400);
 
     return sequelize.query(
       `SELECT era.id, era.employee_id, era.school_id, era.role_name, era.created_at,
               e.fname, e.lname, e.designation
        FROM employee_role_assignments era
        JOIN employees e ON e.id = era.employee_id
-       WHERE era.employee_id = :employeeId`,
-      { replacements: { employeeId: numericId }, type: QueryTypes.SELECT }
+       WHERE era.employee_id = :employeeId
+         AND era.school_id = :schoolId
+         AND e.school_id = :schoolId`,
+      { replacements: { employeeId: numericId, schoolId: numericSchoolId }, type: QueryTypes.SELECT }
     );
   }
 
@@ -43,15 +48,17 @@ class EmployeeRoleRepository {
   async assignRole(employeeId, roleName, schoolId, assignedBy) {
     const numericId = parseInt(employeeId, 10);
     if (Number.isNaN(numericId)) throw new AppError('Invalid employee identifier', 400);
+    const numericSchoolId = parseInt(schoolId, 10);
+    if (Number.isNaN(numericSchoolId)) throw new AppError('Invalid school identifier', 400);
 
     if (!ALLOWED_ROLES.includes(roleName)) {
       throw new AppError(`Invalid role. Allowed roles: ${ALLOWED_ROLES.join(', ')}`, 400);
     }
 
-    // Verify employee exists and belongs to the school
+    // Verify employee exists and belongs to the requested tenant.
     const empRows = await sequelize.query(
-      `SELECT id FROM employees WHERE id = :eid AND deleted_at IS NULL`,
-      { replacements: { eid: numericId }, type: QueryTypes.SELECT }
+      `SELECT id FROM employees WHERE id = :eid AND school_id = :schoolId AND deleted_at IS NULL`,
+      { replacements: { eid: numericId, schoolId: numericSchoolId }, type: QueryTypes.SELECT }
     );
     if (!empRows.length) throw new AppError('Employee not found', 404);
 
@@ -61,7 +68,7 @@ class EmployeeRoleRepository {
        ON CONFLICT (employee_id, role_name) DO NOTHING
        RETURNING id`,
       {
-        replacements: { employeeId: numericId, schoolId, roleName, assignedBy: assignedBy || null },
+        replacements: { employeeId: numericId, schoolId: numericSchoolId, roleName, assignedBy: assignedBy || null },
         type: QueryTypes.SELECT
       }
     );
@@ -69,14 +76,16 @@ class EmployeeRoleRepository {
     return { employeeId: numericId, roleName, alreadyAssigned: rows.length === 0 };
   }
 
-  async removeRole(employeeId, roleName) {
+  async removeRole(employeeId, roleName, schoolId) {
     const numericId = parseInt(employeeId, 10);
     if (Number.isNaN(numericId)) throw new AppError('Invalid employee identifier', 400);
+    const numericSchoolId = parseInt(schoolId, 10);
+    if (Number.isNaN(numericSchoolId)) throw new AppError('Invalid school identifier', 400);
 
-    const result = await sequelize.query(
+    await sequelize.query(
       `DELETE FROM employee_role_assignments
-       WHERE employee_id = :employeeId AND role_name = :roleName`,
-      { replacements: { employeeId: numericId, roleName }, type: QueryTypes.UPDATE }
+       WHERE employee_id = :employeeId AND role_name = :roleName AND school_id = :schoolId`,
+      { replacements: { employeeId: numericId, roleName, schoolId: numericSchoolId }, type: QueryTypes.UPDATE }
     );
 
     return { removed: true };

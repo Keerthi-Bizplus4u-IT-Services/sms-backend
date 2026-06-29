@@ -53,9 +53,9 @@ describe('ParentService', () => {
       };
       parentRepository.findAll.mockResolvedValue(mockResult);
 
-      const result = await parentService.getParents(filters);
+      const result = await parentService.getParents(filters, { schoolId: 1 });
 
-      expect(parentRepository.findAll).toHaveBeenCalledWith(filters);
+      expect(parentRepository.findAll).toHaveBeenCalledWith({ ...filters, schoolId: 1 });
       expect(result.total).toBe(1);
       expect(result.parents).toHaveLength(1);
     });
@@ -70,9 +70,9 @@ describe('ParentService', () => {
       };
       parentRepository.findAll.mockResolvedValue(mockResult);
 
-      const result = await parentService.getParents(filters);
+      const result = await parentService.getParents(filters, { schoolId: 1 });
 
-      expect(parentRepository.findAll).toHaveBeenCalledWith(filters);
+      expect(parentRepository.findAll).toHaveBeenCalledWith({ ...filters, schoolId: 1 });
       expect(result.parents[0].relationshipType).toBe('father');
     });
 
@@ -85,7 +85,7 @@ describe('ParentService', () => {
       };
       parentRepository.findAll.mockResolvedValue(mockResult);
 
-      const result = await parentService.getParents({});
+      const result = await parentService.getParents({}, { schoolId: 1 });
 
       expect(result.parents).toHaveLength(0);
     });
@@ -100,7 +100,7 @@ describe('ParentService', () => {
       };
       parentRepository.findAll.mockResolvedValue(mockResult);
 
-      const result = await parentService.getParents(filters);
+      const result = await parentService.getParents(filters, { schoolId: 1 });
 
       expect(result.page).toBe(2);
       expect(result.totalPages).toBe(2);
@@ -111,9 +111,9 @@ describe('ParentService', () => {
     it('should retrieve parent by valid ID', async () => {
       parentRepository.findById.mockResolvedValue(mockParent);
 
-      const result = await parentService.getParentById(1);
+      const result = await parentService.getParentById(1, { schoolId: 1 });
 
-      expect(parentRepository.findById).toHaveBeenCalledWith(1);
+      expect(parentRepository.findById).toHaveBeenCalledWith(1, 1);
       expect(result.relationshipType).toBe('father');
       expect(result.firstName).toBe('Robert');
     });
@@ -121,7 +121,7 @@ describe('ParentService', () => {
     it('should return null when parent not found', async () => {
       parentRepository.findById.mockResolvedValue(null);
 
-      const result = await parentService.getParentById(999);
+      const result = await parentService.getParentById(999, { schoolId: 1 });
 
       expect(result).toBeNull();
     });
@@ -129,7 +129,7 @@ describe('ParentService', () => {
     it('should include normalized person details', async () => {
       parentRepository.findById.mockResolvedValue(mockParent);
 
-      const result = await parentService.getParentById(1);
+      const result = await parentService.getParentById(1, { schoolId: 1 });
 
       expect(result.email).toBe(mockPerson.email);
       expect(result.city).toBe(mockPerson.city);
@@ -143,7 +143,7 @@ describe('ParentService', () => {
       };
       parentRepository.findById.mockResolvedValue(parentWithOfficePhone);
 
-      const result = await parentService.getParentById(1);
+      const result = await parentService.getParentById(1, { schoolId: 1 });
 
       expect(result.phone).toBe('1234567890');
     });
@@ -303,9 +303,9 @@ describe('ParentService', () => {
       const updatedParent = { ...mockParent, ...updateData.parent };
       parentRepository.update.mockResolvedValue(updatedParent);
 
-      const result = await parentService.updateParent(1, updateData);
+      const result = await parentService.updateParent(1, updateData, { schoolId: 1 });
 
-      expect(parentRepository.update).toHaveBeenCalledWith(1, updateData.parent, updateData.person);
+      expect(parentRepository.update).toHaveBeenCalledWith(1, updateData.parent, updateData.person, 1);
       expect(result.occupation).toBe('Business Owner');
       expect(result.annualIncome).toBe(2000000);
     });
@@ -316,9 +316,9 @@ describe('ParentService', () => {
       };
       parentRepository.update.mockResolvedValue(mockParent);
 
-      await parentService.updateParent(1, parentOnlyData);
+      await parentService.updateParent(1, parentOnlyData, { schoolId: 1 });
 
-      expect(parentRepository.update).toHaveBeenCalledWith(1, parentOnlyData.parent, undefined);
+      expect(parentRepository.update).toHaveBeenCalledWith(1, parentOnlyData.parent, undefined, 1);
     });
 
     it('should update only person data', async () => {
@@ -327,9 +327,9 @@ describe('ParentService', () => {
       };
       parentRepository.update.mockResolvedValue(mockParent);
 
-      await parentService.updateParent(1, personOnlyData);
+      await parentService.updateParent(1, personOnlyData, { schoolId: 1 });
 
-      expect(parentRepository.update).toHaveBeenCalledWith(1, undefined, personOnlyData.person);
+      expect(parentRepository.update).toHaveBeenCalledWith(1, undefined, personOnlyData.person, 1);
     });
 
     it('should update relationship type', async () => {
@@ -339,7 +339,7 @@ describe('ParentService', () => {
       const updatedParent = { ...mockParent, relationship_type: 'guardian' };
       parentRepository.update.mockResolvedValue(updatedParent);
 
-      const result = await parentService.updateParent(1, updateRelationship);
+      const result = await parentService.updateParent(1, updateRelationship, { schoolId: 1 });
 
       expect(result.relationshipType).toBe('guardian');
     });
@@ -388,16 +388,16 @@ describe('ParentService', () => {
     it('should successfully delete parent', async () => {
       parentRepository.delete.mockResolvedValue(true);
 
-      const result = await parentService.deleteParent(1);
+      const result = await parentService.deleteParent(1, { schoolId: 1 });
 
-      expect(parentRepository.delete).toHaveBeenCalledWith(1);
+      expect(parentRepository.delete).toHaveBeenCalledWith(1, 1);
       expect(result).toBe(true);
     });
 
     it('should return false when parent not found', async () => {
       parentRepository.delete.mockResolvedValue(false);
 
-      const result = await parentService.deleteParent(999);
+      const result = await parentService.deleteParent(999, { schoolId: 1 });
 
       expect(result).toBe(false);
     });
@@ -405,9 +405,9 @@ describe('ParentService', () => {
     it('should perform soft delete', async () => {
       parentRepository.delete.mockResolvedValue(true);
 
-      await parentService.deleteParent(1);
+      await parentService.deleteParent(1, { schoolId: 1 });
 
-      expect(parentRepository.delete).toHaveBeenCalledWith(1);
+      expect(parentRepository.delete).toHaveBeenCalledWith(1, 1);
     });
   });
 
@@ -416,7 +416,7 @@ describe('ParentService', () => {
       const dbError = new Error('Database connection failed');
       parentRepository.findAll.mockRejectedValue(dbError);
 
-      await expect(parentService.getParents({}))
+      await expect(parentService.getParents({}, { schoolId: 1 }))
         .rejects
         .toThrow('Database connection failed');
     });
@@ -446,7 +446,7 @@ describe('ParentService', () => {
       };
       parentRepository.update.mockRejectedValue(new Error('Update failed'));
 
-      await expect(parentService.updateParent(1, updateData))
+      await expect(parentService.updateParent(1, updateData, { schoolId: 1 }))
         .rejects
         .toThrow('Update failed');
     });

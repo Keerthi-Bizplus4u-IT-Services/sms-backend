@@ -572,7 +572,7 @@ class StudentService {
 
     await sequelize.transaction(async (transaction) => {
       for (const [sectionId, ids] of updatesBySection.entries()) {
-        await studentRepository.bulkUpdateClassAndSection(ids, toClassId, sectionId, transaction);
+        await studentRepository.bulkUpdateClassAndSection(ids, toClassId, sectionId, schoolId, transaction);
       }
 
       await this.recordPromotionAudit(

@@ -43,8 +43,14 @@ class SectionRepository {
     return Section.create(data);
   }
 
-  async update(id, data) {
-    const section = await Section.findByPk(id);
+  async updateScoped(id, classId, data) {
+    const section = await Section.findOne({
+      where: {
+        id,
+        class_id: classId
+      }
+    });
+
     if (!section) {
       throw new AppError('Section not found', 404);
     }
@@ -52,8 +58,14 @@ class SectionRepository {
     return section.update(data);
   }
 
-  async delete(id) {
-    const section = await Section.findByPk(id);
+  async deleteScoped(id, classId) {
+    const section = await Section.findOne({
+      where: {
+        id,
+        class_id: classId
+      }
+    });
+
     if (!section) {
       throw new AppError('Section not found', 404);
     }

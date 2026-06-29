@@ -883,9 +883,13 @@ class StudentRepository {
   /**
    * Bulk update class and section assignments
    */
-  async bulkUpdateClassAndSection(studentIds, classId, sectionId, transaction) {
+  async bulkUpdateClassAndSection(studentIds, classId, sectionId, schoolId, transaction) {
     if (!studentIds || studentIds.length === 0) {
       return 0;
+    }
+
+    if (!schoolId) {
+      throw new AppError('School scope is required for bulk student updates', 400);
     }
 
     return Student.update(
@@ -895,6 +899,7 @@ class StudentRepository {
       },
       {
         where: {
+          school_id: schoolId,
           id: {
             [Op.in]: studentIds
           }

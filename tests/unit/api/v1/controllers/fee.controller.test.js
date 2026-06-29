@@ -69,7 +69,7 @@ describe('FeeController', () => {
 
       await feeController.recordPayment(req, res, next);
 
-      expect(feeService.recordPayment).toHaveBeenCalledWith(req.body);
+      expect(feeService.recordPayment).toHaveBeenCalledWith(req.body, expect.objectContaining({ schoolId: 1 }));
       expect(success).toHaveBeenCalledWith(res, expect.any(Object), 'Fee payment recorded successfully', 201);
     });
 
@@ -138,7 +138,7 @@ describe('FeeController', () => {
 
       await feeController.deleteFeeStructure(req, res, next);
 
-      expect(feeService.deleteFeeStructure).toHaveBeenCalledWith('FEE-001');
+      expect(feeService.deleteFeeStructure).toHaveBeenCalledWith('FEE-001', expect.objectContaining({ schoolId: 1 }));
     });
   });
 });

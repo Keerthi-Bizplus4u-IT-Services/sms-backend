@@ -18,7 +18,7 @@ class FeeController {
   });
 
   recordPayment = asyncHandler(async (req, res) => {
-    const payment = await feeService.recordPayment(req.body);
+    const payment = await feeService.recordPayment(req.body, resolveFeeScope(req));
     return success(res, payment, 'Fee payment recorded successfully', 201);
   });
 
@@ -47,13 +47,13 @@ class FeeController {
   });
 
   updateFeeStructure = asyncHandler(async (req, res) => {
-    const result = await feeService.updateFeeStructure(req.body);
+    const result = await feeService.updateFeeStructure(req.body, resolveFeeScope(req));
     return success(res, result, 'Fee structure updated successfully', 200);
   });
 
   deleteFeeStructure = asyncHandler(async (req, res) => {
     const { cn } = req.params;
-    const result = await feeService.deleteFeeStructure(cn);
+    const result = await feeService.deleteFeeStructure(cn, resolveFeeScope(req));
     return success(res, result, 'Fee structure deleted successfully', 200);
   });
 }

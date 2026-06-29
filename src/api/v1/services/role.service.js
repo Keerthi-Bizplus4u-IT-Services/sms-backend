@@ -1,12 +1,52 @@
 const roleRepository = require('../repositories/role.repository');
 const { AppError } = require('../../../middleware/error.middleware');
 
+const normalizeRoleName = (actor) => {
+  if (!actor) {
+    return null;
+  }
+
+  const role =
+    actor.roleName ||
+    actor.role ||
+    actor.user?.roleName ||
+    actor.user?.role ||
+    actor.authContext?.roleName ||
+    actor.authContext?.role;
+
+  if (!role || typeof role !== 'string') {
+    return null;
+  }
+
+  return role.trim().toLowerCase();
+};
+
+const assertGlobalRbacReadAccess = (actor) => {
+  const roleName = normalizeRoleName(actor);
+  if (roleName === 'super_admin' || roleName === 'admin') {
+    return;
+  }
+
+  throw new AppError('Global RBAC access requires admin privileges', 403);
+};
+
+const assertGlobalRbacWriteAccess = (actor) => {
+  const roleName = normalizeRoleName(actor);
+  if (roleName === 'super_admin') {
+    return;
+  }
+
+  throw new AppError('Global RBAC write access requires super_admin role', 403);
+};
+
 class RoleService {
-  async listRoles() {
+  async listRoles(actor) {
+    assertGlobalRbacReadAccess(actor);
     return roleRepository.findAll();
   }
 
-  async getRoleById(id) {
+  async getRoleById(id, actor) {
+    assertGlobalRbacReadAccess(actor);
     const role = await roleRepository.findById(id);
     if (!role) {
       throw new AppError('Role not found', 404);
@@ -14,7 +54,8 @@ class RoleService {
     return role;
   }
 
-  async createRole(payload) {
+  async createRole(payload, actor) {
+    assertGlobalRbacWriteAccess(actor);
     const name = (payload.name || '').trim().toLowerCase();
     if (!name) {
       throw new AppError('Role name is required', 400);
@@ -32,7 +73,8 @@ class RoleService {
     });
   }
 
-  async updateRole(id, payload) {
+  async updateRole(id, payload, actor) {
+    assertGlobalRbacWriteAccess(actor);
     const role = await roleRepository.findById(id);
     if (!role) {
       throw new AppError('Role not found', 404);
@@ -58,7 +100,8 @@ class RoleService {
     return roleRepository.update(id, data);
   }
 
-  async deleteRole(id) {
+  async deleteRole(id, actor) {
+    assertGlobalRbacWriteAccess(actor);
     const role = await roleRepository.findById(id);
     if (!role) {
       throw new AppError('Role not found', 404);
